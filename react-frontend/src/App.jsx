@@ -17,6 +17,8 @@ import AdminPanelToursContent from './components/sections/AdminPanel/AdminPanelT
 import ProtectedRoute from "./PtotectedRoute";
 import AdminPanelUsersContent from './components/sections/AdminPanel/AdminPanelUsers/AdminPanelUsersContent';
 import AdminPanelCreateUser from './components/sections/AdminPanel/AdminPanelUsers/AdminPanelCreateUser';
+import AdminPanelInfoSheet from './components/sections/AdminPanel/AdminPanelInfoSheet/AdminPanelInfoSheet';
+import AdminPanelCreateInfoSheet from './components/sections/AdminPanel/AdminPanelInfoSheet/AdminPanelCreateInfoSheet';
 
 function App() {
     return (
@@ -46,6 +48,10 @@ function App() {
                     <Route path="users">
                         <Route index element={<AdminPanelUsersContent />} />
                         <Route path="create_user" element={<AdminPanelCreateUser />} />
+                    </Route>
+                    <Route path="info_sheet">
+                        <Route index element={<AdminPanelInfoSheet />} />
+                        <Route path="create_info_sheet" element={<AdminPanelCreateInfoSheet />} />
                     </Route>
                 </Route>
             </Routes>
