@@ -49,7 +49,7 @@ function App() {
                         <Route index element={<AdminPanelUsersContent />} />
                         <Route path="create_user" element={<AdminPanelCreateUser />} />
                     </Route>
-                    <Route path="info_sheet">
+                    <Route path="info_sheets">
                         <Route index element={<AdminPanelInfoSheet />} />
                         <Route path="create_info_sheet" element={<AdminPanelCreateInfoSheet />} />
                     </Route>
