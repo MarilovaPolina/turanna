@@ -28,21 +28,24 @@ const infoSheetSlice = createSlice({
     loading: false,
     error: null,
     infoSheet: null,
+    success: false
   },
   reducers: {},
   extraReducers: builder => {
     builder
       .addCase(createInfoSheet.pending, state => {
-        state.loading = true
-        state.error = null
+        state.loading = true;
+        state.error = null;
+        state.success = false;
       })
       .addCase(createInfoSheet.fulfilled, (state, action) => {
-        state.loading = false
-        state.infoSheet = action.payload
+        state.loading = false;
+        state.infoSheet = action.payload;
+        state.success = true;
       })
       .addCase(createInfoSheet.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload
+        state.loading = false;
+        state.error = action.payload;
       })
   },
 })

@@ -134,11 +134,11 @@ function AdminPanelCreateUser() {
             {loading ? 'Сохранение...' : 'Сохранить'}
           </button>
 
-          <p class="message_info_block">
+          <p className="message_info_block">
             {error && <div className="error_msg">{error}</div>}
             {success && (
             <div className="success_msg">
-                <p>Пользователь успешно создан! Новый администратор {createdUserName} может войти в систему, 
+                <p>Пользователь успешно создан. Новый администратор {createdUserName} может войти в систему, 
                 используя указанные email и пароль.</p>
             </div>
             )}
