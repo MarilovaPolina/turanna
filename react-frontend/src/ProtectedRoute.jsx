@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
-const PtotectedRoute = ({ children, adminOnly = false }) => {
+const ProtectedRoute = ({ children, adminOnly = false }) => {
     const { token } = useSelector((state) => state.auth);
     const { user } = useSelector((state) => state.auth);
     //const isAdmin = user?.role === 'admin';
@@ -18,4 +18,4 @@ const PtotectedRoute = ({ children, adminOnly = false }) => {
     return children;
 }
 
-export default PtotectedRoute
+export default ProtectedRoute

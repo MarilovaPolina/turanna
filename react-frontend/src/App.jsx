@@ -14,11 +14,12 @@ import Article from './pages/Article';
 import InfoSheet from './pages/InfoSheet';
 import AdminPanelLayout from './layouts/AdminPanelLayout';
 import AdminPanelToursContent from './components/sections/AdminPanel/AdminPanelTours/AdminPanelToursContent';
-import ProtectedRoute from "./PtotectedRoute";
+import ProtectedRoute from "./ProtectedRoute";
 import AdminPanelUsersContent from './components/sections/AdminPanel/AdminPanelUsers/AdminPanelUsersContent';
 import AdminPanelCreateUser from './components/sections/AdminPanel/AdminPanelUsers/AdminPanelCreateUser';
 import AdminPanelInfoSheet from './components/sections/AdminPanel/AdminPanelInfoSheet/AdminPanelInfoSheet';
 import AdminPanelCreateInfoSheet from './components/sections/AdminPanel/AdminPanelInfoSheet/AdminPanelCreateInfoSheet';
+import AdminPanelEditInfoSheet from './components/sections/AdminPanel/AdminPanelInfoSheet/AdminPanelEditInfoSheet';
 
 function App() {
     return (
@@ -52,6 +53,7 @@ function App() {
                     <Route path="info_sheets">
                         <Route index element={<AdminPanelInfoSheet />} />
                         <Route path="create_info_sheet" element={<AdminPanelCreateInfoSheet />} />
+                        <Route path="edit_info_sheet/:id" element={<AdminPanelEditInfoSheet />} />
                     </Route>
                 </Route>
             </Routes>

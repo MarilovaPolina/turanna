@@ -28,11 +28,11 @@ export const getUsers = createAsyncThunk(
   async (_, { rejectWithValue, getState }) => {
     try {
       const { auth } = getState();
-      console.log('Токен: ', auth.token);
       const response = await axios.get('http://localhost:8000/api/users', {
         headers: {
           Authorization: `Bearer ${auth.token}`,
         },
+  
       });
       return response.data;
     } catch (error) {
@@ -50,6 +50,7 @@ export const deleteUser = createAsyncThunk(
         headers: {
           Authorization: `Bearer ${auth.token}`,
         },
+  
       });
       
       dispatch(removeUser({ id: userId }));

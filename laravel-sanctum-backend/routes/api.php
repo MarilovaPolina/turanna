@@ -29,6 +29,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->post('/upload-image', [ImageController::class, 'uploadByFile']);
 
 Route::middleware('auth:sanctum')->post('/info-sheets', [InfoSheetController::class, 'store']);
+Route::middleware('auth:sanctum')->get('/info-sheets', [InfoSheetController::class, 'index']);
+Route::middleware('auth:sanctum')->delete('/info-sheets/{id}', [InfoSheetController::class, 'destroy']);
+Route::middleware('auth:sanctum')->put('/info-sheets/{id}', [InfoSheetController::class, 'update']);
 
 
 

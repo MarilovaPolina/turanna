@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import sortIcon from "../../../../assets/img/icons/sort.png";
-import { useDispatch,useSelector } from 'react-redux';
-import { getUsers } from '../../../../store/usersSlice';
+import { getUsers, deleteUser } from '../../../../store/usersSlice';
 import ActionsPopup from '../../../common/ActionsPopup/ActionsPopup';
 
 const AdminPanelUsersContent = () => {
@@ -14,6 +14,15 @@ const AdminPanelUsersContent = () => {
   React.useEffect(() => {
     dispatch(getUsers()); 
   }, [dispatch]);
+
+  const handleDelete = (userId) => {
+    if (window.confirm('Вы уверены, что хотите удалить этого пользователя?')) {
+      dispatch(deleteUser(userId))
+        .then(() => alert('Пользователь удален успешно'))
+        .catch((error) => alert('Ошибка при удалении пользователя: ' + error.message));
+    }
+  };
+  
   return (
     <div className="admin_panel_content">
       <div className="content_heading">
@@ -52,10 +61,12 @@ const AdminPanelUsersContent = () => {
                   <td className="table_cell">{user.name}</td>
                   <td className="table_cell">{user.email}</td>
                   <td className="table_cell">
-                    <ActionsPopup 
-                      userId={user.id}
+                    <ActionsPopup
+                      id={user.id}
                       currentOpenId={currentOpenId}
                       setCurrentOpenId={setCurrentOpenId}
+                      onDelete={handleDelete}
+                      onEdit={() => console.log("edit")}
                     />
                   </td>
                 </tr>

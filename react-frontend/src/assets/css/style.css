@@ -71,7 +71,7 @@
 }
 
 .subtitle_text{
-    font-size: clamp(1rem, 0.875rem + 0.56vw, 1.375rem);
+    font-size: clamp(1rem, 0.75rem + 0.52vw, 1.375rem);
     font-weight: 400;
     margin-top: 1.5rem;
     line-height: 140%;
@@ -95,6 +95,11 @@
 
 a{
     cursor: pointer;
+}
+
+.underline_blue_link{
+    color: var(--main-color);
+    text-decoration: underline !important;
 }
 
 .star{
@@ -1128,6 +1133,12 @@ textarea{
     background-image: url('../img/paper_bg.png');
 }
 
+@media (max-width: 1440px) {
+    .our_team_block .container{
+        max-width: 1100px;
+    }
+}
+
 @media (max-width: 768px) {
     .our_team_content{
         display: flex;
@@ -1336,6 +1347,7 @@ textarea{
 .reviews_vk_text .subtitle_text{
     color: #BFD2E6;
     align-items: center;
+    margin-top: 0;
 }
 
 .reviews_vk_text .subtitle_text img{
@@ -1395,6 +1407,13 @@ textarea{
 .reviews_vk_image{
     text-align: center;
 }
+
+@media (max-width: 1440px) {
+    .reviews_vk .container{
+        max-width: 1100px;
+    }
+}
+
 
 
 @media (max-width: 1000px) {
@@ -3152,7 +3171,7 @@ b{
 }
 
 .data_table {
-    width: 100%;
+    width: 99%;
     border-collapse: collapse;
     margin-bottom: 5rem;
 }
@@ -3213,6 +3232,7 @@ b{
     font-weight: 800;
     display: flex;
     justify-content: flex-end; 
+    margin-top: -13px;
 }
 
 .table_actions span:hover{
@@ -3226,7 +3246,7 @@ b{
     position: absolute;
     top: 100%;
     right: -0.1rem;
-    margin-top: -8px;
+    margin-top: 0px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(34, 34, 34, 0.15);
@@ -3330,13 +3350,6 @@ b{
 .burger_menu_overlay.active {
     opacity: 1;
     visibility: visible;
-}
-
-@media(max-width:1450px){
-    .admin_sidebar .logo_img{
-        display: none;
-    }
-    
 }
 
 @media (max-width: 1300px) {

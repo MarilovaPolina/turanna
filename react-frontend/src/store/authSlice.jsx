@@ -9,7 +9,7 @@ export const loginUser = createAsyncThunk(
       const {data} = await axios.post("http://localhost:8000/api/login", {email, password});
       return data;
     }catch(error){
-      return rejectWithValue(error.response?.data?.message || "Authorization error");
+      return rejectWithValue(error.response?.data?.message || "Ошибка авторизации");
     }
   }
 );
@@ -23,6 +23,7 @@ export const getUser = createAsyncThunk(
         headers: {
           Authorization: `Bearer ${auth.token}`,
         },
+   
       });
       return data;
     } catch (error) {
@@ -30,9 +31,6 @@ export const getUser = createAsyncThunk(
     }
   }
 );
-
-
-
 
 const initialState = {
   loading: null,

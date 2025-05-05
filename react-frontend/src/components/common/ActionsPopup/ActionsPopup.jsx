@@ -1,14 +1,11 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { deleteUser } from "../../../store/usersSlice";
 
-const ActionsPopup = ({ userId, currentOpenId, setCurrentOpenId }) => {
+const ActionsPopup = ({ id, currentOpenId, setCurrentOpenId, onDelete, onEdit }) => {
   const popupRef = React.useRef(null);
-  const dispatch = useDispatch();
 
   const togglePopup = (e) => {
     e.stopPropagation();
-    setCurrentOpenId(currentOpenId === userId ? null : userId);
+    setCurrentOpenId(currentOpenId === id ? null : id);
   };
 
   const handleClickOutside = (event) => {
@@ -24,24 +21,23 @@ const ActionsPopup = ({ userId, currentOpenId, setCurrentOpenId }) => {
     };
   }, []);
 
-  const onDelete = (e) => {
+  const handleDelete = (e) => {
     e.stopPropagation();
-    
-    if (window.confirm('Вы уверены, что хотите удалить этого пользователя?')) {
-      dispatch(deleteUser(userId))
-        .then(() => setCurrentOpenId(null))
-        .catch(error => alert('Ошибка: ' + error.message));
-    }
+    if (onDelete) onDelete(id);
   };
 
+  const handleEdit = (e) => {
+    e.stopPropagation();
+    if (onEdit) onEdit(id);
+  };
 
   return (
     <div className="table_actions" onClick={togglePopup}>
       <span>...</span>
-      {currentOpenId === userId && (
+      {currentOpenId === id && (
         <div className="actions_popup" ref={popupRef}>
-          <div className="action_item">Редактировать</div>
-          <div onClick={onDelete} className="action_item">Удалить</div>
+          <div onClick={handleEdit} className="action_item">Редактировать</div>
+          <div onClick={handleDelete} className="action_item">Удалить</div>
         </div>
       )}
     </div>

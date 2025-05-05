@@ -1,20 +1,19 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import TextEditor from '../../../common/TextEditor/TextEditor';
-import { createInfoSheet } from '../../../../store/infoSheetSlice';
-
-const INITIAL_DATA = {
-  time: new Date().getTime(),
-  blocks: [],
-};
+import { createInfoSheet, resetSuccess } from '../../../../store/infoSheetSlice';
 
 const AdminPanelCreateInfoSheet = () => {
-  const [data, setData] = React.useState(INITIAL_DATA);
+  const [data, setData] = React.useState(() => ({
+    time: new Date().getTime(),
+    blocks: [],
+  }));
   const [title, setTitle] = React.useState('');
   const dispatch = useDispatch();
   const { loading, error, success } = useSelector((state) => state.infoSheet);
   const [inputsError, setInputsError] = React.useState('');
 
+  console.log("success: ", success);
   const hasContent = (blocks) => {
     if (!blocks || blocks.length === 0) return false;
 
@@ -28,6 +27,12 @@ const AdminPanelCreateInfoSheet = () => {
       return true;
     });
   };
+
+  React.useEffect(() => {
+    return () => {
+      dispatch(resetSuccess());
+    };
+  }, [dispatch]);
 
   React.useEffect(() => {
     if (title.trim().length > 0 && hasContent(data.blocks)) {
@@ -77,7 +82,7 @@ const AdminPanelCreateInfoSheet = () => {
           <label htmlFor="info_sheet_title">Содержание</label>
           <div className={`info_sheet_editor_wrapper ${inputsError ? 'error_input' : ''}`}>
             <div className="info_sheet_editor_content">
-              <TextEditor data={data} onChange={setData} editorBlock="editorjs-container" />
+              <TextEditor data={data} onChange={setData} editorBlock="create-info-editor"  />
             </div>
           </div>
 

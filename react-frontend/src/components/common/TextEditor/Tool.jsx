@@ -7,11 +7,18 @@ export const EDITOR_JS_TOOLS = {
         class: ImageTool,
         config: {
             endpoints: {
-            byFile: 'http://localhost:8000/api/upload-image',
-            }
-        }
+                byFile: 'http://localhost:8000/api/upload-image',
+            },
+            features: {
+                caption: true,
+                border: false,
+                background: false,
+                stretch: true,
+            },
+        },
     },
-    
+
+
     header: {
         class: Header,
         config: {
