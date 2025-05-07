@@ -13,7 +13,6 @@ const AdminPanelCreateInfoSheet = () => {
   const { loading, error, success } = useSelector((state) => state.infoSheet);
   const [inputsError, setInputsError] = React.useState('');
 
-  console.log("success: ", success);
   const hasContent = (blocks) => {
     if (!blocks || blocks.length === 0) return false;
 
@@ -79,9 +78,9 @@ const AdminPanelCreateInfoSheet = () => {
             />
           </div>
 
-          <label htmlFor="info_sheet_title">Содержание</label>
-          <div className={`info_sheet_editor_wrapper ${inputsError ? 'error_input' : ''}`}>
-            <div className="info_sheet_editor_content">
+          <label>Содержание</label>
+          <div className={`text_editor_wrapper ${inputsError ? 'error_input' : ''}`}>
+            <div className="text_editor_content">
               <TextEditor data={data} onChange={setData} editorBlock="create-info-editor"  />
             </div>
           </div>

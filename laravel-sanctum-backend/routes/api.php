@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\InfoSheetController;
@@ -33,5 +34,8 @@ Route::middleware('auth:sanctum')->get('/info-sheets', [InfoSheetController::cla
 Route::middleware('auth:sanctum')->delete('/info-sheets/{id}', [InfoSheetController::class, 'destroy']);
 Route::middleware('auth:sanctum')->put('/info-sheets/{id}', [InfoSheetController::class, 'update']);
 
-
+Route::middleware('auth:sanctum')->get('/articles', [ArticleController::class, 'index']);
+Route::middleware('auth:sanctum')->post('/articles', [ArticleController::class, 'store']);
+Route::middleware('auth:sanctum')->put('/articles/{id}', [ArticleController::class, 'update']);
+Route::middleware('auth:sanctum')->delete('/articles/{id}', [ArticleController::class, 'destroy']);
 

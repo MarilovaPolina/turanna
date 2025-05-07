@@ -20,6 +20,8 @@ import AdminPanelCreateUser from './components/sections/AdminPanel/AdminPanelUse
 import AdminPanelInfoSheet from './components/sections/AdminPanel/AdminPanelInfoSheet/AdminPanelInfoSheet';
 import AdminPanelCreateInfoSheet from './components/sections/AdminPanel/AdminPanelInfoSheet/AdminPanelCreateInfoSheet';
 import AdminPanelEditInfoSheet from './components/sections/AdminPanel/AdminPanelInfoSheet/AdminPanelEditInfoSheet';
+import AdminPanelArticle from './components/sections/AdminPanel/AdminPanelArticles/AdminPanelArticles';
+import AdminPanelCreateArticle from './components/sections/AdminPanel/AdminPanelArticles/AdminPanelCreateArticle';
 
 function App() {
     return (
@@ -54,6 +56,10 @@ function App() {
                         <Route index element={<AdminPanelInfoSheet />} />
                         <Route path="create_info_sheet" element={<AdminPanelCreateInfoSheet />} />
                         <Route path="edit_info_sheet/:id" element={<AdminPanelEditInfoSheet />} />
+                    </Route>
+                    <Route path="articles">
+                        <Route index element={<AdminPanelArticle />} />
+                        <Route path="create_article" element={<AdminPanelCreateArticle />} />
                     </Route>
                 </Route>
             </Routes>

@@ -115,6 +115,11 @@ body{
     font-size: clamp(1rem, 0.958rem + 0.19vw, 1.125rem);
     font-weight: 300;
     color: var(--grey-text);
+    overflow-x:hidden;
+}
+
+.wrapper{
+    overflow-x:hidden;
 }
 
 main{
@@ -3140,7 +3145,7 @@ b{
 .admin_panel_content {
     padding: clamp(0.75rem, 0.678rem + 0.32vw, 1.063rem) clamp(1.875rem, 1.442rem + 1.92vw, 3.75rem);
     padding-left: clamp(0.75rem, 0.49rem + 1.15vw, 1.875rem);
-    padding-top: 5rem;
+    padding-top: 3rem;
 }
 
 .content_heading {
@@ -3168,6 +3173,9 @@ b{
     margin-top: 1.5rem;
     width: 100%;
     overflow-x: auto;
+    max-height: 62vh;
+    scrollbar-color: #d1d1d1 #ffffff;
+    scrollbar-width: thin;
 }
 
 .data_table {
@@ -3239,6 +3247,11 @@ b{
     color: #bdbdbd;
 }
 
+.date_td{
+    min-width: 140px;
+    white-space: nowrap;
+}
+
 
 /* actions popup */
 
@@ -3279,6 +3292,7 @@ b{
     font-weight: 400;
     color: var(--black-text);
     margin-bottom: 4rem;
+    margin-top: 1.5rem;
 }
 
 .col_sort{
@@ -3435,7 +3449,7 @@ b{
 
 
 /* TEXT EDITOR */
-.info_sheet_editor_wrapper{
+.text_editor_wrapper{
     width: 100%;
     border: 1px solid #ECECEC;
     border-radius: 12px;
@@ -3445,7 +3459,7 @@ b{
     background-color: #F3F3F3;
 }
 
-.info_sheet_editor_content{
+.text_editor_content{
     background-color: white;
     height: 100%;
     max-width: 850px;
@@ -3473,10 +3487,10 @@ b{
 
 
 @media(max-width: 650px){
-    .info_sheet_editor_wrapper{
+    .text_editor_wrapper{
         padding: 0;
     }
-    .info_sheet_editor_content{
+    .text_editor_content{
         border-radius: 12px;
         padding: clamp(0.813rem, -0.894rem + 7.59vw, 2.188rem) clamp(0.813rem, -2.834rem + 16.21vw, 3.75rem);
     }
@@ -3516,3 +3530,40 @@ b{
 }
   
 /* TEXT EDITOR */
+
+
+
+/*CREATE ARTICLE */
+
+.main_image_input_wrapper{
+    margin-bottom: 1.5rem;
+}
+
+.input_file_wrapper{
+    margin-top: 0.3rem;
+    text-align: center;
+    border: 2px dashed rgb(210, 227, 244);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 12px;
+    height: clamp(15.625rem, 13.462rem + 9.62vw, 25rem);
+    object-fit: cover;
+    overflow: hidden;
+}
+
+.main_image_input_wrapper input{
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+

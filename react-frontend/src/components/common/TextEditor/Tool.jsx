@@ -9,15 +9,15 @@ export const EDITOR_JS_TOOLS = {
             endpoints: {
                 byFile: 'http://localhost:8000/api/upload-image',
             },
+            captionPlaceholder: "Фото от: Имя Фамилия",
             features: {
                 caption: true,
                 border: false,
                 background: false,
-                stretch: true,
+                stretch: false,
             },
         },
     },
-
 
     header: {
         class: Header,

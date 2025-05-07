@@ -7,12 +7,14 @@ import sortIcon from "../../../../assets/img/icons/sort.png";
 import ActionsPopup from '../../../common/ActionsPopup/ActionsPopup';
 import { getInfoSheets, deleteInfoSheet } from '../../../../store/infoSheetSlice';
 import EditorContentPreview from '../../../common/TextEditor/EditorContentPreview';
+import { setSortBy, setSortOrder, sortData, toggleSortOrder  } from '../../../../store/tableSortSlice';
 
 const AdminPanelInfoSheet = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { infoSheets, loading, error } = useSelector((state) => state.infoSheet);
   const [currentOpenId, setCurrentOpenId] = React.useState(null);
+  const { sortBy, sortOrder } = useSelector((state) => state.tableSort);
 
   React.useEffect(() => {
     dispatch(getInfoSheets());
@@ -25,6 +27,17 @@ const AdminPanelInfoSheet = () => {
         .catch((error) => alert('Ошибка при удалении справки: ' + error.message));
     }
   };
+
+  const handleSort = (column) => {
+    if (sortBy === column) {
+      dispatch(toggleSortOrder()); 
+    } else {
+      dispatch(setSortBy(column)); 
+      dispatch(setSortOrder('asc'));
+    }
+  };
+
+  const sortedInfoSheets = sortData(infoSheets, sortBy, sortOrder); 
 
   return (
     <div className="admin_panel_content">
@@ -39,19 +52,18 @@ const AdminPanelInfoSheet = () => {
             <tr className="table_row">
               <th className="table_cell">
                 ID
-                <img className="col_sort" src={sortIcon} alt="Sort" />
+                <img onClick={() => handleSort('id')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell">
                 Заголовок
-                <img className="col_sort" src={sortIcon} alt="Sort" />
+                <img onClick={() => handleSort('title')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell">
                 Текст
-                <img className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell">
                 Дата создания
-                <img className="col_sort" src={sortIcon} alt="Sort" />
+                <img onClick={() => handleSort('date')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell"></th>
             </tr>
@@ -62,12 +74,19 @@ const AdminPanelInfoSheet = () => {
             ) : error ? (
               <tr><td colSpan="4">Ошибка при загрузке справочной информации</td></tr>
             ) : (
-              infoSheets.map((infoSheet) => (
+              sortedInfoSheets.map((infoSheet) => (
                 <tr key={infoSheet.id}>
                   <td>{infoSheet.id}</td>
                   <td>{infoSheet.title}</td>
                   <td><EditorContentPreview content={infoSheet.content} /></td>
-                  <td>{new Date(infoSheet.created_at).toLocaleDateString()}</td>
+                  <td className='date_td'>{new Date(infoSheet.created_at).toLocaleString('ru-RU', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false,
+                  })}</td>
                   <td>
                     <ActionsPopup
                       id={infoSheet.id}
@@ -82,8 +101,8 @@ const AdminPanelInfoSheet = () => {
             )}
           </tbody>
         </table>
-        <div className="table_footer">Всего {infoSheets.length} результатов</div>
       </div>
+      <div className="table_footer">Всего {infoSheets.length} результатов</div>
     </div>
   )
 }

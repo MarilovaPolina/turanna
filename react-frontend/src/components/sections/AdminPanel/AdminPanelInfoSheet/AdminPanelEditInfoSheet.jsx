@@ -115,8 +115,8 @@ const AdminPanelEditInfoSheet = () => {
                     </div>
 
                     <label htmlFor="info_sheet_title">Содержание</label>
-                    <div className={`info_sheet_editor_wrapper ${inputsError ? 'error_input' : ''}`}>
-                        <div className="info_sheet_editor_content">
+                    <div className={`text_editor_wrapper ${inputsError ? 'error_input' : ''}`}>
+                        <div className="text_editor_content">
                             <TextEditor 
                                 data={initialData} 
                                 editorBlock="editorjs-container" 

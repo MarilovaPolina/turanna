@@ -29,6 +29,7 @@ const TextEditor = ({ data, onChange, editorBlock }) => {
       tools: toolsWithAuth,
       data,
       autofocus: true,
+      placeholder: "Новый абзац...",
       i18n: {
         messages: {
           toolNames: {

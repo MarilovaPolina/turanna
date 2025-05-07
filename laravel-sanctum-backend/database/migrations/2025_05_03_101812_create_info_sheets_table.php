@@ -14,9 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('info_sheets', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->json('content'); // данные Editor.js
+            $table->unsignedInteger('id')->autoIncrement();
+            $table->string('title', 32);
+            $table->json('content');
             $table->timestamps();
         });
     }

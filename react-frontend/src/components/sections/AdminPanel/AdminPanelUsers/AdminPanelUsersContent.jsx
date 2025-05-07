@@ -5,11 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import sortIcon from "../../../../assets/img/icons/sort.png";
 import { getUsers, deleteUser } from '../../../../store/usersSlice';
 import ActionsPopup from '../../../common/ActionsPopup/ActionsPopup';
+import { setSortBy, setSortOrder, sortData, toggleSortOrder  } from '../../../../store/tableSortSlice';
+
 
 const AdminPanelUsersContent = () => {
   const dispatch = useDispatch();
   const { users, loading, error } = useSelector(state => state.users); 
   const [currentOpenId, setCurrentOpenId] = React.useState(null);
+  const { sortBy, sortOrder } = useSelector((state) => state.tableSort);
 
   React.useEffect(() => {
     dispatch(getUsers()); 
@@ -22,6 +25,17 @@ const AdminPanelUsersContent = () => {
         .catch((error) => alert('Ошибка при удалении пользователя: ' + error.message));
     }
   };
+  
+  const handleSort = (column) => {
+    if (sortBy === column) {
+      dispatch(toggleSortOrder()); 
+    } else {
+      dispatch(setSortBy(column)); 
+      dispatch(setSortOrder('asc'));
+    }
+  };
+
+  const sortedUsers = sortData(users, sortBy, sortOrder);
   
   return (
     <div className="admin_panel_content">
@@ -36,15 +50,15 @@ const AdminPanelUsersContent = () => {
             <tr className="table_row">
               <th className="table_cell">
                 ID
-                <img className="col_sort" src={sortIcon} alt="Sort" />
+                <img onClick={() => handleSort('id')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell">
                 Имя
-                <img className="col_sort" src={sortIcon} alt="Sort" />
+                <img onClick={() => handleSort('name')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell">
                 Эл. почта
-                <img className="col_sort" src={sortIcon} alt="Sort" />
+                <img onClick={() => handleSort('email')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell"></th>
             </tr>
@@ -55,7 +69,7 @@ const AdminPanelUsersContent = () => {
             ) : error ? (
               <tr><td colSpan="4">Ошибка при загрузке пользователей</td></tr>
             ) : (
-              users.map(user => (
+              sortedUsers.map(user => (
                 <tr className="table_row" key={user.id}>
                   <td className="table_cell">{user.id}</td>
                   <td className="table_cell">{user.name}</td>
