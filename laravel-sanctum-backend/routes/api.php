@@ -37,13 +37,13 @@ Route::middleware('auth:sanctum')->put('/info-sheets/{id}', [InfoSheetController
 
 Route::middleware('auth:sanctum')->get('/articles', [ArticleController::class, 'index']);
 Route::middleware('auth:sanctum')->post('/articles', [ArticleController::class, 'store']);
-Route::middleware('auth:sanctum')->put('/articles/{id}', [ArticleController::class, 'update']);
+Route::middleware('auth:sanctum')->match(['post', 'put'], '/articles/{id}', [ArticleController::class, 'update']);
 Route::middleware('auth:sanctum')->delete('/articles/{id}', [ArticleController::class, 'destroy']);
 Route::middleware('auth:sanctum')->get('/articles/{id}', [ArticleController::class, 'show']);
 
 Route::middleware('auth:sanctum')->get('/certificates', [CertificateController::class, 'index']);
 Route::middleware('auth:sanctum')->post('/certificates', [CertificateController::class, 'store']);
 Route::middleware('auth:sanctum')->delete('/certificates/{id}', [CertificateController::class, 'destroy']);
-Route::middleware('auth:sanctum')->put('/certificates/{id}', [CertificateController::class, 'update']);
+Route::middleware('auth:sanctum')->match(['post', 'put'], '/certificates/{id}', [CertificateController::class, 'update']);
 
 

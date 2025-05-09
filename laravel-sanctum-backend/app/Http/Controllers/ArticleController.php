@@ -11,7 +11,7 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        $articles = Article::all();
+        $articles = Article::orderBy('created_at', 'desc')->get();
         return response()->json($articles);
     }
 
@@ -56,52 +56,49 @@ class ArticleController extends Controller
 
     public function update(Request $request, $id)
     {
+        $article = Article::findOrFail($id);
+
         $request->validate([
             'title' => 'sometimes|string|max:75',
             'content' => 'required',
-            'main_image' => 'sometimes|image|mimes:jpeg,png,jpg,svg|max:8192',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:8192',
         ]);
 
-        $article = Article::findOrFail($id);
-
-        $articleData = [];
         if ($request->has('title')) {
-            $articleData['title'] = $request->title;
+            $article->title = $request->title;
         }
-        if ($request->has('content')) {
-            $articleData['content'] = $request->content;
-        }
+
+        $article->content = $request->input('content');
 
         if ($request->hasFile('main_image')) {
             if ($article->main_image) {
-                $oldImagePath = str_replace('/storage', 'public', $article->main_image);
-                Storage::delete($oldImagePath);
+                Storage::delete(str_replace('/storage/', 'public/', $article->main_image));
             }
-
-            // Сохранение основного изображения
-            $path = $request->file('main_image')->store('public/articles/images');
-            $articleData['main_image'] = Storage::url($path);
-
-            // Удаление старой миниатюры
             if ($article->thumbnail_image) {
-                $oldThumbnailPath = str_replace('/storage', 'public', $article->thumbnail_image);
-                Storage::delete($oldThumbnailPath);
+                Storage::delete(str_replace('/storage/', 'public/', $article->thumbnail_image));
             }
 
-            // Создание новой миниатюры
+            $path = $request->file('main_image')->store('public/articles/images');
+            $article->main_image = Storage::url($path);
+
             $image = Image::make($request->file('main_image'));
             $thumbnailPath = 'public/articles/thumbnails/' . $request->file('main_image')->hashName();
-            $image->resize(64, 40);
+            $image->resize(64, 40, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+            $image->resizeCanvas(64, 40, 'center', false, null);
             $image->save(storage_path('app/' . $thumbnailPath));
 
-            // Обновление пути к миниатюре
-            $articleData['thumbnail_image'] = Storage::url($thumbnailPath);
+            $article->thumbnail_image = Storage::url($thumbnailPath);
         }
 
-        $article->update($articleData);
+        $article->save();
 
         return response()->json($article);
     }
+
+
 
     public function destroy($id)
     {

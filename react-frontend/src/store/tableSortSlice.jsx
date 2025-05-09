@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   sortBy: 'id', 
-  sortOrder: 'asc',
+  sortOrder: 'desc',
 };
 
 const tableSortSlice = createSlice({

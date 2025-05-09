@@ -21,7 +21,6 @@ class CertificateController extends Controller
             'title' => 'required|string|max:75',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:8192',
         ]);
-
         $data = ['title' => $request->title];
 
         if ($request->hasFile('image')) {
@@ -45,6 +44,49 @@ class CertificateController extends Controller
 
         return response()->json($certificate, 201);
     }
+
+    public function update(Request $request, $id)
+    {
+        $certificate = Certificate::findOrFail($id);
+        $request->validate([
+            'title' => 'required|string|max:75',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:8192',
+        ]);
+
+        $certificate->title = $request->title;
+
+        if ($request->hasFile('image')) {
+            // Удаление старых изображений
+            if ($certificate->image) {
+                Storage::delete(str_replace('/storage/', 'public/', $certificate->image));
+            }
+            if ($certificate->thumbnail_image) {
+                Storage::delete(str_replace('/storage/', 'public/', $certificate->thumbnail_image));
+            }
+
+            // Сохранение нового изображения
+            $path = $request->file('image')->store('public/certificates/images');
+            $certificate->image = Storage::url($path);
+
+            // Создание миниатюры
+            $image = Image::make($request->file('image'));
+            $thumbnailPath = 'public/certificates/thumbnails/' . $request->file('image')->hashName();
+            $image->resize(50, 35, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+            $image->resizeCanvas(50, 35, 'center', false, null);
+            $image->save(storage_path('app/' . $thumbnailPath));
+
+            $certificate->thumbnail_image = Storage::url($thumbnailPath);
+        }
+
+        $certificate->save();
+
+        return response()->json($certificate);
+    }
+
+
 /*
     public function update(Request $request, Certificate $certificate)
     {
@@ -55,9 +97,7 @@ class CertificateController extends Controller
 
         $certificate->title = $request->title;
 
-        // Если изображение было передано — обрабатываем его
         if ($request->hasFile('image')) {
-            // Удаление старых файлов
             if ($certificate->image) {
                 Storage::delete(str_replace('/storage/', 'public/', $certificate->image));
             }
@@ -65,11 +105,9 @@ class CertificateController extends Controller
                 Storage::delete(str_replace('/storage/', 'public/', $certificate->thumbnail_image));
             }
 
-            // Сохраняем новое изображение
             $path = $request->file('image')->store('public/certificates/images');
             $certificate->image = Storage::url($path);
 
-            // Создаём миниатюру
             $image = Image::make($request->file('image'));
             $thumbnailPath = 'public/certificates/thumbnails/' . $request->file('image')->hashName();
             $image->resize(50, 35, function ($constraint) {
@@ -82,50 +120,11 @@ class CertificateController extends Controller
             $certificate->thumbnail_image = Storage::url($thumbnailPath);
         }
 
-        // Если файл не был отправлен — старое изображение остаётся без изменений
         $certificate->save();
 
         return response()->json($certificate);
     }
 */
-
-    public function update(Request $request, Certificate $certificate)
-    {
-        $request->validate([
-            'title' => 'required|string|max:75',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:8192',
-        ]);
-
-        $certificate->title = $request->title;
-
-        if ($request->hasFile('image')) {
-            if ($certificate->image) {
-                Storage::delete(str_replace('/storage/', 'public/', $certificate->image));
-            }
-            if ($certificate->thumbnail_image) {
-                Storage::delete(str_replace('/storage/', 'public/', $certificate->thumbnail_image));
-            }
-
-            $path = $request->file('image')->store('public/certificates/images');
-            $certificate->image = Storage::url($path);
-
-            $image = Image::make($request->file('image'));
-            $thumbnailPath = 'public/certificates/thumbnails/' . $request->file('image')->hashName();
-            $image->resize(50, 35, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
-            $image->resizeCanvas(50, 35, 'center', false, null);
-            $image->save(storage_path('app/' . $thumbnailPath));
-
-            $certificate->thumbnail_image = Storage::url($thumbnailPath);
-        }
-
-        $certificate->save();
-
-        return response()->json($certificate);
-    }
-    
     public function destroy($id)
     {
         $certificate = Certificate::find($id);

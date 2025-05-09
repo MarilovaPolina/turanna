@@ -49,13 +49,20 @@ export const deleteArticle = createAsyncThunk(
 
 export const updateArticle = createAsyncThunk(
   'article/updateArticle',
-  async({articleId, title, content, main_image}, {rejectWithValue, getState}) => {
+  async({articleId, formData}, {rejectWithValue, getState}) => {
     try{
+      console.log("ЩА БУДЕМ ЛОГИРОВАТЬ");
+        formData.forEach((value, key) => {
+          console.log("ЛОГИРУЕМ ИЗ РЕДАКС", key, value);
+        });
+      formData.append('_method', 'PUT');
       const { auth } = getState();
-      const { data } = await axios.put(`http://localhost:8000/api/articles/${articleId}`, { title, content, main_image }, {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
+      const { data } = await axios.post(
+        `http://localhost:8000/api/articles/${articleId}`, 
+        formData, {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
       });
 
       return data;
@@ -81,6 +88,7 @@ export const getArticles = createAsyncThunk(
       return data;
     }
     catch(error){
+
       return rejectWithValue(error.response?.data?.message || "Ошибка при получении информации о статье");
     }
   }

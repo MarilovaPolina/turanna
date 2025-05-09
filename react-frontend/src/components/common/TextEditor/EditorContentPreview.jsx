@@ -1,12 +1,15 @@
 import React from 'react';
 
 const EditorContentPreview = ({ content }) => {
-  const parsedContent =
-    typeof content === 'string' ? JSON.parse(content) : content;
+  if (!content ) return '–'; 
 
+  const parsedContent = typeof content === 'string' ? JSON.parse(content) : content;
+
+  if (!parsedContent || !parsedContent.blocks) return 'no-blocks';
+  
   const blocks = parsedContent.blocks || parsedContent.content?.blocks;
 
-  if (!blocks) return '–';
+  if (!blocks ) return 'no-blocks'; 
 
   const textOnly = blocks
     .filter((block) => block.type !== 'image')

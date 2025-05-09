@@ -16,7 +16,6 @@ const AdminPanelEditCertificate = () => {
   const [previewImage, setPreviewImage] = useState('');
 
   useEffect(() => {
-    console.log("certificates", certificates)
     const certificate = certificates.find((c) => c.id === parseInt(id));
     if (certificate) {
       setTitle(certificate.title);
@@ -24,7 +23,6 @@ const AdminPanelEditCertificate = () => {
       console.log(certificate.image)
     }
   }, [certificates, id]);
-
 
   useEffect(() => {
     return () => {
@@ -40,18 +38,6 @@ const AdminPanelEditCertificate = () => {
     }
 
     setInputsError('');
-    
-  /*  const formData = new FormData();
-    formData.append('title', title);
-
-    if (image) {
-      formData.append('image', image); 
-    } else {
-      console.log("Сохраняем старое изображение", previewImage);
-    }*/
-    console.log(title, image)
-    console.log(typeof title)
-
     const formData = new FormData();
     formData.append('title', title);
     if (image) {
@@ -61,7 +47,7 @@ const AdminPanelEditCertificate = () => {
     try {
       await dispatch(updateCertificate({ certificateId: id, formData }))
         .unwrap()
-        .catch((error) => {
+        .catch((error) => {   
           if (error.includes('The image must be a file of type')) {
             setInputsError('Недопустимый формат изображения. JPEG, PNG, JPG, SVG. Возможно, файл потенциально небозопасен или поврежден. Попробуйте пересохранить изображение (напр. с помощью редактора фото)');
           } else {
@@ -117,19 +103,20 @@ const AdminPanelEditCertificate = () => {
           </div>
         </div>
 
-        <button type="submit" className="blue_btn" disabled={loading}>
+        <button type="submit" className="blue_btn">
           {loading ? 'Сохранение...' : 'Сохранить'}
         </button>
 
         <div className="message_info_block">
-          {inputsError 
-          ? <div className="error_msg">{inputsError}</div>
-          : error && <div className="error_msg">{error}</div>}
-          {success && (
-            <div className="success_msg">
-              <p>Сертификат успешно обновлен.</p>
-            </div>
-          )}
+        {inputsError ? (
+          <div className="error_msg">{inputsError}</div>
+        ) : error ? (
+          <div className="error_msg">{error}</div>
+        ) : success ? (
+          <div className="success_msg">
+            <p>Сертификат успешно обновлен и опубликован.</p>
+          </div>
+        ) : null}
         </div>
       </form>
     </div>

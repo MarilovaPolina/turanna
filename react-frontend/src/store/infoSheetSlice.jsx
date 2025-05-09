@@ -48,6 +48,10 @@ export const updateInfoSheet = createAsyncThunk(
   'infoSheet/updateInfoSheet',
   async({infoSheetId, title, content}, {rejectWithValue, getState}) => {
     try{
+      console.log("ЩА БУДЕМ ЛОГИРОВАТЬ");
+      console.log(title);
+      console.log(content);
+
       const { auth } = getState();
       const { data } = await axios.put(`http://localhost:8000/api/info-sheets/${infoSheetId}`, { title, content }, {
         headers: {

@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import TextEditor from '../../../common/TextEditor/TextEditor';
 import { updateArticle, resetSuccess } from '../../../../store/articlesSlice';
+import uploadImageIcon from "../../../../assets/img/icons/upload_image.png"
 
 const AdminPanelEditArticle = () => {
   const dispatch = useDispatch();
@@ -12,9 +13,10 @@ const AdminPanelEditArticle = () => {
   const { loading, error, success, articles } = useSelector((state) => state.article);
 
   const [title, setTitle] = React.useState('');
-  const [data, setData] = React.useState(null);
+  const [initialData, setInitialData] = React.useState(null);
+  const [editorData, setEditorData] = React.useState(null);
   const [mainImage, setMainImage] = React.useState(null);
-  const [previewImageUrl, setPreviewImageUrl] = React.useState(null);
+  const [previewImage, setPreviewImage] = React.useState(null);
   const [inputsError, setInputsError] = React.useState('');
   const [imageError, setImageError] = React.useState('');
 
@@ -25,11 +27,13 @@ const AdminPanelEditArticle = () => {
     if (article) {
       setTitle(article.title);
 
-      const parsedContent = typeof article.content === 'string'
-        ? JSON.parse(article.content)
-        : article.content;
-      setData(parsedContent);
-      setPreviewImageUrl(article.main_image || null);
+      const parsedContent = typeof article.content === 'string' ? JSON.parse(article.content) : article.content;
+      if (parsedContent?.blocks) {
+        setInitialData(parsedContent);
+        setEditorData(parsedContent);
+      }
+
+      setPreviewImage(article.main_image || null);
     }
   }, [id, articles]);
 
@@ -54,10 +58,14 @@ const AdminPanelEditArticle = () => {
   };
 
   React.useEffect(() => {
-    if (title.trim().length > 0 && data?.blocks && hasContent(data.blocks)) {
+    if (title.trim().length > 0 && editorData?.blocks && hasContent(editorData.blocks)) {
       setInputsError('');
     }
-  }, [title, data]);
+  }, [title, editorData]);
+
+  const handleEditorChange = (newData) => {
+    setEditorData(newData);
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -70,35 +78,43 @@ const AdminPanelEditArticle = () => {
 
     setImageError('');
     setMainImage(file);
-    setPreviewImageUrl(URL.createObjectURL(file));
   };
 
   const handleSave = (e) => {
     e.preventDefault();
 
-    if (!title.trim() || !data?.blocks || !hasContent(data.blocks)) {
+    if (
+      !title.trim() ||
+      !editorData ||
+      !editorData.blocks ||
+      !hasContent(editorData.blocks)
+    ) {
       setInputsError('Поля не должны быть пустыми');
       return;
     }
 
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('content', JSON.stringify(data));
-    if (mainImage) formData.append('main_image', mainImage);
+    try{
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('content', JSON.stringify(editorData));
+      if (mainImage){
+        formData.append('main_image', mainImage);
+      } 
 
-    dispatch(updateArticle({
-      articleId: id,
-      title,
-      content: JSON.stringify(data),
-      main_image: mainImage || undefined,
-    })).unwrap()
-      .catch((error) => {
-        if (error.includes('The main image must be a file of type')) {
-          setImageError('Недопустимый формат изображения. JPEG, PNG, JPG, SVG. Возможно, файл потенциально небозопасен или поврежден. Попробуйте пересохранить изображение (напр. с помощью редактора фото)');
-        } else {
-          setInputsError(error);
-        }
-      });
+      dispatch(updateArticle({ articleId: id, formData }))
+        .unwrap()
+        .catch((error) => {
+          if (error.includes('The main image must be a file of type')) {
+            setImageError('Недопустимый формат изображения. JPEG, PNG, JPG, SVG. Возможно, файл потенциально небозопасен или поврежден. Попробуйте пересохранить изображение (напр. с помощью редактора фото)');
+          } else {
+            setInputsError(error);
+          }
+        });
+    }catch(err){
+      console.error('Ошибка при сохранении содержания справки: ', err);
+      setInputsError('Ошибка при сохранении содержания справки');
+    }
+    
   };
 
   return (
@@ -131,14 +147,17 @@ const AdminPanelEditArticle = () => {
           <div className="main_image_input_wrapper">
             <label>Главное изображение:</label>
             <div className="input_file_wrapper">
-              {previewImageUrl 
-              ? <img src={previewImageUrl} alt="Превью" />
-              : 
-              <>
-                <img src={uploadImage} />
-                <h3>Нажмите, чтобы выбрать фото</h3>
-              </>
-              }
+              {mainImage ? (
+                <img src={URL.createObjectURL(mainImage)} />
+              ) : previewImage ? (
+                <img src={`http://localhost:8000${previewImage}`} alt="certificate" />
+              ) : (
+                <>
+                  <img src={uploadImageIcon} className="upload_img_icon" alt="upload" />
+                  <h3>Нажмите, чтобы выбрать фото</h3>
+                </>
+              )}
+
               <input
                 onChange={handleImageChange}
                 disabled={loading}
@@ -153,12 +172,12 @@ const AdminPanelEditArticle = () => {
           <label>Содержание</label>
           <div className={`text_editor_wrapper ${inputsError ? 'error_input' : ''}`}>
             <div className="text_editor_content">
-              {data && (
+              {editorData && (
                 <TextEditor
-                  data={data}
-                  onChange={setData}
-                  editorBlock="edit-article-editor"
+                  data={initialData}
+                  editorBlock="editorjs-container"
                   editorRef={editorRef}
+                  onChange={handleEditorChange}
                 />
               )}
             </div>
@@ -169,14 +188,17 @@ const AdminPanelEditArticle = () => {
           </button>
 
           <div className="message_info_block">
-            {inputsError && <div className="error_msg">{inputsError}</div>}
-            {error && <div className="error_msg">{error}</div>}
-            {imageError && <div className="error_msg">{imageError}</div>}
-            {success && (
+            {inputsError ? (
+              <div className="error_msg">{inputsError}</div>
+            ) : error ? (
+              <div className="error_msg">{error}</div>
+            ) : imageError ? (
+              <div className="error_msg">{imageError}</div>
+            ) : success ? (
               <div className="success_msg">
                 <p>Статья успешно обновлена и опубликована.</p>
               </div>
-            )}
+            ) : null}
           </div>
         </form>
       </div>

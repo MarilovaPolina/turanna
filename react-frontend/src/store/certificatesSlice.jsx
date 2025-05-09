@@ -29,6 +29,10 @@ export const createCertificate = createAsyncThunk(
           'Content-Type': 'multipart/form-data',
         },
       });
+      formData.forEach((value, key) => {
+        console.log(key, value);
+      });
+      
       return response.data;
     } catch (error) {
       if (error.response?.status === 422) {
@@ -57,19 +61,23 @@ export const deleteCertificate = createAsyncThunk(
         }
     }
 )
-
 export const updateCertificate = createAsyncThunk(
     'certificates/updateCertificate',
     async ({ certificateId, formData }, { rejectWithValue, getState }) => {
       try {
+        formData.append('_method', 'PUT');
         const { auth } = getState();
-        const { data } = await axios.post(`http://localhost:8000/api/certificates/${certificateId}?_method=PUT`, formData, {
+        const response = await axios.post( 
+          `http://localhost:8000/api/certificates/${certificateId}`,
+          formData,
+          {
             headers: {
               Authorization: `Bearer ${auth.token}`,
-              'Content-Type': 'multipart/form-data',
             },
-          });
-        return data;
+          }
+        );
+       
+        return response.data;
       } catch (error) {
         return rejectWithValue(error.response?.data?.message || 'Ошибка при обновлении сертификата');
       }
@@ -141,20 +149,21 @@ const certificatesSlice = createSlice({
       .addCase(updateCertificate.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.success = false;
       })
       .addCase(updateCertificate.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.certificates.findIndex(cert => cert.id === action.payload.id);
+        const index = state.certificates.findIndex(item => item.id === action.payload.id);
         if (index !== -1) {
           state.certificates[index] = action.payload;
+        } else {
+          state.certificates.push(action.payload);
         }
-        state.success = true;
+        state.success=true;
       })
       .addCase(updateCertificate.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
-        state.success = false;
+        state.error = action.payload || 'Ошибка обновления сертификата';
+        state.success=false;
       });
   },
 });
