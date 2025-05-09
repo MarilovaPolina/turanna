@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\InfoSheetController;
 use Illuminate\Http\Request;
@@ -38,4 +39,11 @@ Route::middleware('auth:sanctum')->get('/articles', [ArticleController::class, '
 Route::middleware('auth:sanctum')->post('/articles', [ArticleController::class, 'store']);
 Route::middleware('auth:sanctum')->put('/articles/{id}', [ArticleController::class, 'update']);
 Route::middleware('auth:sanctum')->delete('/articles/{id}', [ArticleController::class, 'destroy']);
+Route::middleware('auth:sanctum')->get('/articles/{id}', [ArticleController::class, 'show']);
+
+Route::middleware('auth:sanctum')->get('/certificates', [CertificateController::class, 'index']);
+Route::middleware('auth:sanctum')->post('/certificates', [CertificateController::class, 'store']);
+Route::middleware('auth:sanctum')->delete('/certificates/{id}', [CertificateController::class, 'destroy']);
+Route::middleware('auth:sanctum')->put('/certificates/{id}', [CertificateController::class, 'update']);
+
 

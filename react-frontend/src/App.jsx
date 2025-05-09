@@ -22,6 +22,10 @@ import AdminPanelCreateInfoSheet from './components/sections/AdminPanel/AdminPan
 import AdminPanelEditInfoSheet from './components/sections/AdminPanel/AdminPanelInfoSheet/AdminPanelEditInfoSheet';
 import AdminPanelArticle from './components/sections/AdminPanel/AdminPanelArticles/AdminPanelArticles';
 import AdminPanelCreateArticle from './components/sections/AdminPanel/AdminPanelArticles/AdminPanelCreateArticle';
+import AdminPanelEditArticle from './components/sections/AdminPanel/AdminPanelArticles/AdminPanelEditArticle';
+import AdminPanelCertificates from './components/sections/AdminPanel/AdminPanelCertificates/AdminPanelCertificates';
+import AdminPanelCreateCertificate from './components/sections/AdminPanel/AdminPanelCertificates/AdminPanelCreateCertificate';
+import AdminPanelEditCertificate from './components/sections/AdminPanel/AdminPanelCertificates/AdminPanelEditCertificate';
 
 function App() {
     return (
@@ -60,6 +64,12 @@ function App() {
                     <Route path="articles">
                         <Route index element={<AdminPanelArticle />} />
                         <Route path="create_article" element={<AdminPanelCreateArticle />} />
+                        <Route path="edit_article/:id" element={<AdminPanelEditArticle />} />
+                    </Route>
+                    <Route path="certificates">
+                        <Route index element={<AdminPanelCertificates />} />
+                        <Route path="create_certificate" element={<AdminPanelCreateCertificate />} />
+                        <Route path="edit_certificate/:id" element={<AdminPanelEditCertificate />} />
                     </Route>
                 </Route>
             </Routes>

@@ -33,19 +33,25 @@ class ArticleController extends Controller
             $path = $request->file('main_image')->store('public/articles/images');
             $articleData['main_image'] = Storage::url($path);
 
-            // Создание миниатюры
+            // Создание миниатюры изображения
             $image = Image::make($request->file('main_image'));
             $thumbnailPath = 'public/articles/thumbnails/' . $request->file('main_image')->hashName();
             $image->resize(64, 40);
             $image->save(storage_path('app/' . $thumbnailPath));
 
-            // путь к миниатюре
+            // Путь к миниатюре
             $articleData['thumbnail_image'] = Storage::url($thumbnailPath);
         }
 
         $article = Article::create($articleData);
 
         return response()->json($article, 201);
+    }
+
+    public function show($id)
+    {
+        $article = Article::findOrFail($id);
+        return response()->json($article);
     }
 
     public function update(Request $request, $id)

@@ -78,8 +78,8 @@ const AdminPanelEditInfoSheet = () => {
             setInputsError('');
             dispatch(updateInfoSheet({ infoSheetId: id, title, content }));
         } catch (err) {
-            console.error('Ошибка при сохранении Editor.js', err);
-            setInputsError('Ошибка при сохранении редактора');
+            console.error('Ошибка при сохранении содержания справки: ', err);
+            setInputsError('Ошибка при сохранении содержания справки');
         }
     };
 

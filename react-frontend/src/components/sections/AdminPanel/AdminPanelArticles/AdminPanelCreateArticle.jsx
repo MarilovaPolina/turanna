@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import TextEditor from '../../../common/TextEditor/TextEditor';
 import { createArticle, resetSuccess } from '../../../../store/articlesSlice';
 
+import uploadImageIcon from "../../../../assets/img/icons/upload_image.png"
+
 const AdminPanelCreateArticle = () => {
   const [data, setData] = React.useState(() => ({
     time: new Date().getTime(),
@@ -68,8 +70,8 @@ const AdminPanelCreateArticle = () => {
     formData.append('content', JSON.stringify(data));
     formData.append('main_image', mainImage);
 
-    console.log('content:', JSON.stringify(data));
-    dispatch(createArticle( formData )).unwrap()
+    dispatch(createArticle( formData ))
+    .unwrap()
     .catch((error) => {
       if (error.includes('The main image must be a file of type: jpeg, png, jpg, svg.')) {
         setImageError('Недопустимый формат изображения. Разрешены только: JPEG, PNG, JPG, SVG. Возможно, файл потенциально небозопасен или поврежден. Попробуйте пересохранить изображение (напр. с помощью редактора фото)');
@@ -99,7 +101,7 @@ const AdminPanelCreateArticle = () => {
               type="text"
               className={`admin_input ${inputsError ? 'error_input' : ''}`}
               placeholder="Название (максимум 75 символов)"
-              maxLength={32}
+              maxLength={75}
               name="article_title"
               required
               disabled={loading}
@@ -112,11 +114,13 @@ const AdminPanelCreateArticle = () => {
             <label >Главное изображение:</label>
             <div className="input_file_wrapper">
             {mainImage 
-            ? <img src={URL.createObjectURL(mainImage)} />
-            : 
-
-            <h3>Нажмите, чтобы выбрать фото</h3>
-            }
+                ? <img src={URL.createObjectURL(mainImage)} />
+                : 
+                <>
+                    <img src={uploadImageIcon} />
+                    <h3>Нажмите, чтобы выбрать фото</h3>
+                </>
+              }
               
               <input 
                 onChange={mainImageChange}

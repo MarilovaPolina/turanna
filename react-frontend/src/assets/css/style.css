@@ -3227,6 +3227,13 @@ b{
     color: var(--black-text);
 }
 
+.title_td{
+    max-width: 35vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .table_image {
     width: 4rem;
     height: 2.5rem;
@@ -3552,6 +3559,11 @@ b{
     height: clamp(15.625rem, 13.462rem + 9.62vw, 25rem);
     object-fit: cover;
     overflow: hidden;
+}
+
+.input_file_wrapper .upload_img_icon{
+    width: 8rem;
+    margin-right: 2rem;
 }
 
 .main_image_input_wrapper input{

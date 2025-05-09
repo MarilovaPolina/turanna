@@ -5,6 +5,7 @@ import usersReducer from "./usersSlice"
 import infoSheetSlice from "./infoSheetSlice"
 import tableSortSlice from "./tableSortSlice"
 import articlesSlice from "./articlesSlice"
+import certificatesSlice from "./certificatesSlice"
 
 export const store = configureStore ({
   reducer:{
@@ -13,5 +14,6 @@ export const store = configureStore ({
     infoSheet: infoSheetSlice,
     tableSort: tableSortSlice,
     article: articlesSlice,
+    certificates: certificatesSlice,
   }
 });

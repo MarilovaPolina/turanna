@@ -17,11 +17,11 @@ export const createArticle = createAsyncThunk(
         return data;
       } catch (error) {
         if (error.response?.status === 422) {
-          const errors = error.response.data.errors;
-          const errorMessage = Object.values(errors).flat().join(' ');
-          return rejectWithValue(errorMessage);
-        }
-        return rejectWithValue(error.response?.data?.message || 'Ошибка при создании статьи');
+        const errors = error.response.data.errors;
+        const errorMessage = Object.values(errors).flat().join(' ');
+        return rejectWithValue(errorMessage);
+      }
+      return rejectWithValue(error.response?.data?.message || 'Ошибка при создании статьи');
       }
     }
   );

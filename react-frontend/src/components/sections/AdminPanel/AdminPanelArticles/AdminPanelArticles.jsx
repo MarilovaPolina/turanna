@@ -38,7 +38,6 @@ const AdminPanelArticle = () => {
   };
 
   const sortedArticles = sortData(articles, sortBy, sortOrder); 
-  console.log(sortedArticles); 
   return (
     <div className="admin_panel_content">
       <div className="content_heading">
