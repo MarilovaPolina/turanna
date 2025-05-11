@@ -4,12 +4,9 @@ const EditorContentPreview = ({ content }) => {
   if (!content ) return '–'; 
 
   const parsedContent = typeof content === 'string' ? JSON.parse(content) : content;
-
-  if (!parsedContent || !parsedContent.blocks) return 'no-blocks';
+  if (!parsedContent) return 'No content';
   
   const blocks = parsedContent.blocks || parsedContent.content?.blocks;
-
-  if (!blocks ) return 'no-blocks'; 
 
   const textOnly = blocks
     .filter((block) => block.type !== 'image')

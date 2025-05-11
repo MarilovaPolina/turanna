@@ -6,6 +6,7 @@
     --grey-text: #646464;
     --light-blue:#4D7CAC;
     --hover_blue: #45719e;
+    --red: #c62828;
 }
 
 /* cursor */
@@ -85,7 +86,7 @@
 
 .error_msg{
     font-size: 16px;
-    color: #c62828;
+    color: var(--red);
 }
 
 .substring a{
@@ -103,7 +104,7 @@ a{
 }
 
 .star{
-    color: #c62828;
+    color: var(--red);
 }
 
 
@@ -2187,6 +2188,11 @@ label{
     margin-top: 5rem;
 }
 
+.article_intro .large_text{
+    line-height: 90%;
+    margin-bottom: 1rem;
+}
+
 .article_intro_image {
     padding: clamp(0.75rem, 0.583rem + 0.74vw, 1.25rem);
     position: relative;
@@ -3041,6 +3047,19 @@ b{
     padding-right: 0.9rem;
 }
 
+.new_applications_badge {
+    border-radius: 100%;
+    background-color: #e4221f;
+    font-size: 14px;
+    color: white;
+    width: 1.3rem;
+    height: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+}
+
 .settings_list {
     margin-top: 0.7rem;
 }
@@ -3259,6 +3278,42 @@ b{
     white-space: nowrap;
 }
 
+.td_width_limit{
+    max-width: 100px;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+}
+
+
+.rejected_application,
+.accepted_application,
+.completed_application,
+.new_application{
+    height: auto;
+    padding: 0.1rem;
+    border-radius: 10px;
+    background-color: #e4221f;
+    font-size: 14px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.accepted_application{
+    background-color: var(--main-color);
+}
+
+.completed_application{
+    background-color: #b0b0b0;
+}
+
+.new_application{
+    background-color: #5ccd3a;
+}
+
+
 
 /* actions popup */
 
@@ -3450,7 +3505,7 @@ b{
 }
 
 .error_input{
-    border: 1px solid #c62828 !important;
+    border: 1px solid var(--red) !important;
 }
 
 
@@ -3579,3 +3634,107 @@ b{
     cursor: pointer;
 }
 
+
+
+
+
+/* CREATE TOUR PACKAGE */
+
+.uploaded_images_wrapper{
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 0.3rem; 
+}
+
+.uploaded_image{
+    height: 16rem;
+    border-radius: 12px;
+    width: auto;
+    display: inline-block; 
+    overflow: hidden;
+
+}
+
+.uploaded_image img {
+    max-height: 100%; 
+    width: auto; 
+    object-fit: contain; 
+}
+
+.upload_image_gallery .input_file_wrapper{
+    max-width: 13rem;
+    height: 16rem;
+    padding: 1rem;
+}
+
+.create_tour_variants_block{
+    margin-top: 4rem;
+}
+
+.tour_creation_wrapper{
+    margin-top: 0.9rem;
+    margin-bottom: 3rem;
+}
+
+.tour_creation_description{
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 1.3rem;
+    position: relative;
+}
+
+.divided_two_inputs{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.3rem;
+    align-items: center;
+}
+
+.tour_creation_inputs .form_group .admin_input{
+    max-width: 100%;
+}
+
+.radio_btns_wrapper{
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-left: 1rem;
+}
+
+.radio_btns_wrapper input{
+    width: auto;
+}
+
+.tour_creation_details{
+    background-color: #F2F9FF;
+    border-radius: 12px;
+    border: 1px solid #EAEAEA;
+    padding: 1.5rem 1rem;
+}
+
+.details_inputs_wrapper{
+    display: grid;
+    margin-top: 0.5rem;
+    gap: 0.3rem;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.details_inputs_wrapper input, 
+.details_inputs_wrapper select{
+    background-color: white;
+    border: 1px solid #ECECEC;
+}
+
+.details_inputs_wrapper .form_group label{
+    align-items: center;
+    display: flex;
+    gap: 0.3rem;
+}
+
+.create_tour_variant_btn .input_file_wrapper{
+    text-transform: uppercase;
+    max-height: 8rem;
+    margin-bottom: 4rem;
+}

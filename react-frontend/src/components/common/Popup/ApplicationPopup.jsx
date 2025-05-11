@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { useDispatch } from "react-redux";
+import { createApplication } from "../../../store/applicationsSlice";
 
 import closeImg from '../../../assets/img/icons/close.png';
 import womanBeachImg from '../../../assets/img/woman_beach.png';
@@ -7,6 +9,7 @@ import womanBeachImg from '../../../assets/img/woman_beach.png';
 const application_popup = document.getElementById("application_popup");
 
 function ApplicationPopup({ isOpen, onClose, communicationMethod }) {
+    const dispatch = useDispatch();
     const [chosenCommunicationMethod, setChosenCommunicationMethod] = React.useState(communicationMethod);
     
     React.useEffect(() => {
@@ -16,6 +19,24 @@ function ApplicationPopup({ isOpen, onClose, communicationMethod }) {
     const handleMethodChange = (e) => {
         setChosenCommunicationMethod(e.target.value);
     };
+
+    // Отправка заявки
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = {
+          name: formData.get('name') || '',
+          communication_method: formData.get('communication_method'),
+          contacts: formData.get('phone') || formData.get('contact') || '',
+          communication_time: formData.get('time') || null,
+          direction: formData.get('direction') || '',
+          budget: formData.get('budget') || '',
+          notes: formData.get('notes') || '',
+          status: 'new',
+        };
+        dispatch(createApplication(data));
+        onClose(); 
+      };
 
     if (!isOpen) return null;
 
@@ -39,7 +60,7 @@ function ApplicationPopup({ isOpen, onClose, communicationMethod }) {
                                         </p>
                                     </div>
 
-                                    <form className="application_form_panel">
+                                    <form onSubmit={handleSubmit} className="application_form_panel">
                                         <select 
                                             name="communication_method" 
                                             className="how_to_chat"
@@ -58,18 +79,18 @@ function ApplicationPopup({ isOpen, onClose, communicationMethod }) {
 
                                             <div className="form_group">
                                                 <label htmlFor="phone">Телефон <span className="star">*</span></label>
-                                                <input id="phone" name="phone" placeholder="8 (___) ___-__-__" type="text" />
+                                                <input id="phone" name="phone" placeholder="8 (___) ___-__-__" type="text" required/>
                                             </div>
 
                                             <div className="form_group">
                                                 <label htmlFor="time">Когда вам будет комфортно обсудить поездку?</label>
                                                 <select name="time" id="time">
-                                                    <option value="call">В любое время</option>
-                                                    <option value="morning">Утром (09:00 - 12:00)</option>
-                                                    <option value="afternoon">После обеда (12:00 - 17:00)</option>
-                                                    <option value="evening">Вечером (17:00 - 21:00)</option>
-                                                    <option value="weekend_morning">В выходные дни до 14:00</option>
-                                                    <option value="weekend_evening">В выходные дни после 14:00</option>
+                                                    <option value="В любое время">В любое время</option>
+                                                    <option value="Утром (09:00 - 12:00)">Утром (09:00 - 12:00)</option>
+                                                    <option value="После обеда (12:00 - 17:00)">После обеда (12:00 - 17:00)</option>
+                                                    <option value="Вечером (17:00 - 21:00)">Вечером (17:00 - 21:00)</option>
+                                                    <option value="В выходные дни до 14:00">В выходные дни до 14:00</option>
+                                                    <option value="В выходные дни после 14:00">В выходные дни после 14:00</option>
                                                 </select>
                                             </div>
 
@@ -97,7 +118,7 @@ function ApplicationPopup({ isOpen, onClose, communicationMethod }) {
                                         </p>
                                     </div>
 
-                                    <form className="application_form_panel">
+                                    <form onSubmit={handleSubmit} className="application_form_panel">
                                         <select 
                                             name="communication_method" 
                                             className="how_to_chat"
@@ -116,7 +137,7 @@ function ApplicationPopup({ isOpen, onClose, communicationMethod }) {
 
                                             <div className="form_group">
                                                 <label htmlFor="contact">Ссылка на мессенджер, почту или соц. сеть <span className="star">*</span></label>
-                                                <input id="contact" name="contact" placeholder="Место, где вам удобно получить подборку" type="text" />
+                                                <input id="contact" name="contact" placeholder="Место, где вам удобно получить подборку" type="text" required/>
                                             </div>
 
                                             <div className="form_group">

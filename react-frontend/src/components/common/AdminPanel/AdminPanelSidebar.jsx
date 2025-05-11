@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import logo from '../../../assets/img/logo.png';
 import folderIcon from '../../../assets/img/icons/folder.png';
@@ -12,8 +13,11 @@ import certificateIcon from '../../../assets/img/icons/certificate.png';
 import settingsIcon from '../../../assets/img/icons/settings.png';
 
 const AdminPanelSidebar = ({ isMobile, sidebarOpen }) => {
+    const applications = useSelector((state) => state.applications.applications);
+    const newApplicationsCount = applications.filter(app => app.status === 'Новая').length;
+
     const menuItems = [
-        { to: "applications", icon: folderIcon, text: "Заявки" },
+        { to: "applications", icon: folderIcon, text: "Заявки", count: newApplicationsCount },
         { to: "tours", icon: ticketIcon, text: "Туры" },
         { to: "articles", icon: penIcon, text: "Статьи" },
         { to: "users", icon: peopleIcon, text: "Пользователи" },
@@ -45,6 +49,9 @@ const AdminPanelSidebar = ({ isMobile, sidebarOpen }) => {
                                 >
                                     <img src={item.icon} alt={item.text} />
                                     {item.text}
+                                    {item.count > 0 && (
+                                        <span className="new_applications_badge">{item.count}</span>
+                                    )}
                                 </NavLink>
                             </li>
                         ))}

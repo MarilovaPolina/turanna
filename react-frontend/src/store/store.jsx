@@ -1,4 +1,3 @@
-import React from 'react'
 import { configureStore } from "@reduxjs/toolkit"
 import authReducer from "./authSlice"
 import usersReducer from "./usersSlice"
@@ -6,6 +5,7 @@ import infoSheetSlice from "./infoSheetSlice"
 import tableSortSlice from "./tableSortSlice"
 import articlesSlice from "./articlesSlice"
 import certificatesSlice from "./certificatesSlice"
+import applicationsSlice from "./applicationsSlice"
 
 export const store = configureStore ({
   reducer:{
@@ -15,5 +15,6 @@ export const store = configureStore ({
     tableSort: tableSortSlice,
     article: articlesSlice,
     certificates: certificatesSlice,
+    applications: applicationsSlice,
   }
 });

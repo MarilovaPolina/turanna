@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CertificateController;
@@ -46,4 +47,10 @@ Route::middleware('auth:sanctum')->post('/certificates', [CertificateController:
 Route::middleware('auth:sanctum')->delete('/certificates/{id}', [CertificateController::class, 'destroy']);
 Route::middleware('auth:sanctum')->match(['post', 'put'], '/certificates/{id}', [CertificateController::class, 'update']);
 
+Route::post('/applications', [ApplicationController::class, 'store']);
+Route::middleware('auth:sanctum')->get('/applications', [ApplicationController::class, 'index']);
+Route::middleware('auth:sanctum')->delete('/applications/{id}', [ApplicationController::class, 'destroy']);
+Route::middleware('auth:sanctum')->put('/applications/{id}/status', [ApplicationController::class, 'updateStatus']);
+Route::middleware('auth:sanctum')->post('/applications/{id}/document', [ApplicationController::class, 'uploadDocument']);
+Route::middleware('auth:sanctum')->get('/applications/{id}', [ApplicationController::class, 'show']);
 

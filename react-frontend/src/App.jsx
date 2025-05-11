@@ -26,6 +26,8 @@ import AdminPanelEditArticle from './components/sections/AdminPanel/AdminPanelAr
 import AdminPanelCertificates from './components/sections/AdminPanel/AdminPanelCertificates/AdminPanelCertificates';
 import AdminPanelCreateCertificate from './components/sections/AdminPanel/AdminPanelCertificates/AdminPanelCreateCertificate';
 import AdminPanelEditCertificate from './components/sections/AdminPanel/AdminPanelCertificates/AdminPanelEditCertificate';
+import AdminPanelApplications from './components/sections/AdminPanel/AdminPanelApplications/AdminPanelApplications';
+import AdminPanelEditApplication from './components/sections/AdminPanel/AdminPanelApplications/AdminPanelEditApplication';
 
 function App() {
     return (
@@ -70,6 +72,10 @@ function App() {
                         <Route index element={<AdminPanelCertificates />} />
                         <Route path="create_certificate" element={<AdminPanelCreateCertificate />} />
                         <Route path="edit_certificate/:id" element={<AdminPanelEditCertificate />} />
+                    </Route>
+                    <Route path="applications">
+                        <Route index element={<AdminPanelApplications />} />
+                        <Route path="edit_application/:id" element={<AdminPanelEditApplication />} />
                     </Route>
                 </Route>
             </Routes>
