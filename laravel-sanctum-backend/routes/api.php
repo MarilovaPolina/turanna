@@ -6,6 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\InfoSheetController;
+use App\Http\Controllers\TourPackageController;
+use App\Http\Controllers\TourPackageImageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -54,3 +56,9 @@ Route::middleware('auth:sanctum')->put('/applications/{id}/status', [Application
 Route::middleware('auth:sanctum')->post('/applications/{id}/document', [ApplicationController::class, 'uploadDocument']);
 Route::middleware('auth:sanctum')->get('/applications/{id}', [ApplicationController::class, 'show']);
 
+Route::middleware('auth:sanctum')->get('/tour-packages/{id}', [TourPackageController::class, 'show']);
+Route::middleware('auth:sanctum')->get('/tour-packages', [TourPackageController::class, 'index']);
+//
+Route::middleware('auth:sanctum')->post('/tour-packages/{tourPackageId}/images', [TourPackageImageController::class, 'store']);
+Route::middleware('auth:sanctum')->get('/tour-packages/{tourPackageId}/images', [TourPackageImageController::class, 'index']);
+Route::middleware('auth:sanctum')->delete('/tour-package-images/{id}', [TourPackageImageController::class, 'destroy']);

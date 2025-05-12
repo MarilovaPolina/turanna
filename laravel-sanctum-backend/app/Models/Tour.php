@@ -21,6 +21,8 @@ class Tour extends Model
         'price_type',
         'end_date',
         'status',
+        'image_text_copyright',
+        'image_link_copyright',
     ];
 
     protected $casts = [

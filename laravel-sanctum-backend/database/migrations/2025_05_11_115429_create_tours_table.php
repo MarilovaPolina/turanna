@@ -26,6 +26,8 @@ return new class extends Migration
             $table->enum('price_type', ['per_person', 'per_couple']);
             $table->date('end_date');
             $table->enum('status', ['active', 'expired']);
+            $table->string('image_text_copyright', 40)->nullable();
+            $table->string('image_link_copyright')->nullable();
             $table->timestamps();
 
             $table->foreign('tour_package_id')->references('id')->on('tour_packages')->onDelete('cascade');

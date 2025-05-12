@@ -28,6 +28,7 @@ import AdminPanelCreateCertificate from './components/sections/AdminPanel/AdminP
 import AdminPanelEditCertificate from './components/sections/AdminPanel/AdminPanelCertificates/AdminPanelEditCertificate';
 import AdminPanelApplications from './components/sections/AdminPanel/AdminPanelApplications/AdminPanelApplications';
 import AdminPanelEditApplication from './components/sections/AdminPanel/AdminPanelApplications/AdminPanelEditApplication';
+import AdminPanelCreateTourPackage from './components/sections/AdminPanel/AdminPanelTours/AdminPanelCreateTourPackage';
 
 function App() {
     return (
@@ -53,7 +54,11 @@ function App() {
                         </ProtectedRoute>
                     } 
                 >
-                    <Route path="tours" element={<AdminPanelToursContent />} />
+
+                    <Route path="tours">
+                        <Route index element={<AdminPanelToursContent />} />
+                        <Route path="create_tour_package" element={<AdminPanelCreateTourPackage />} />
+                    </Route>
                     <Route path="users">
                         <Route index element={<AdminPanelUsersContent />} />
                         <Route path="create_user" element={<AdminPanelCreateUser />} />
