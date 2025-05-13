@@ -6,6 +6,7 @@ import tableSortSlice from "./tableSortSlice"
 import articlesSlice from "./articlesSlice"
 import certificatesSlice from "./certificatesSlice"
 import applicationsSlice from "./applicationsSlice"
+import tourPackageSlice from "./tourPackageSlice"
 
 export const store = configureStore ({
   reducer:{
@@ -16,5 +17,6 @@ export const store = configureStore ({
     article: articlesSlice,
     certificates: certificatesSlice,
     applications: applicationsSlice,
+    tourPackage: tourPackageSlice,
   }
 });

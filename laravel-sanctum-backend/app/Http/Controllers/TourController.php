@@ -23,7 +23,6 @@ class TourController extends Controller
             'price' => 'required|numeric|min:0',
             'price_type' => 'required|in:per_person,per_couple',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'status' => 'required|in:active,expired',
             'details' => 'nullable|array',
             'image_text_copyright' => 'nullable|string|max:40',
             'image_link_copyright' => 'nullable|string|max:255',
@@ -44,17 +43,19 @@ class TourController extends Controller
             'price',
             'price_type',
             'end_date',
-            'status',
             'image_text_copyright',
             'image_link_copyright',
         ]);
+        
+        $tourData['status'] = 'active';
 
         $tour = Tour::create($tourData);
 
         if ($request->has('details')) {
-            $detailsData = $request->input('details');
-            $detailsData['tour_id'] = $tour->id;
-            TourDetail::create($detailsData);
+            foreach ($request->input('details') as $detail) {
+                $detail['tour_id'] = $tour->id;
+                TourDetail::create($detail);
+            }
         }
 
         return response()->json($tour->load('details'), 201);

@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('tour_details', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedInteger('id')->autoIncrement();
             $table->unsignedInteger('tour_id')->unique();
 
             $table->string('room_class', 35)->nullable();

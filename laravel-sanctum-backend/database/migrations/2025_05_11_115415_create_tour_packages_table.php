@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('tour_packages', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedInteger('id')->autoIncrement();
             $table->string('title', 40);
             $table->string('departure_city', 25);
             $table->string('arrival_city', 25);

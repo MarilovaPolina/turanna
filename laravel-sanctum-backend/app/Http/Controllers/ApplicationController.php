@@ -36,7 +36,7 @@ class ApplicationController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        $validated['status'] = 'Новая';
+        $validated['status'] = Application::$newApplication;
 
         $application = Application::create($validated);
 

@@ -6,6 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\InfoSheetController;
+use App\Http\Controllers\TourController;
+use App\Http\Controllers\TourDetailController;
 use App\Http\Controllers\TourPackageController;
 use App\Http\Controllers\TourPackageImageController;
 use Illuminate\Http\Request;
@@ -58,7 +60,15 @@ Route::middleware('auth:sanctum')->get('/applications/{id}', [ApplicationControl
 
 Route::middleware('auth:sanctum')->get('/tour-packages/{id}', [TourPackageController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/tour-packages', [TourPackageController::class, 'index']);
-//
-Route::middleware('auth:sanctum')->post('/tour-packages/{tourPackageId}/images', [TourPackageImageController::class, 'store']);
+Route::middleware('auth:sanctum')->post('/tour-packages', [TourPackageController::class, 'store']);
+Route::middleware('auth:sanctum')->put('/tour-packages', [TourPackageController::class, 'update']);
+Route::middleware('auth:sanctum')->delete('/tour-packages', [TourPackageController::class, 'destroy']);
+
+Route::middleware('auth:sanctum')->post('/tour-package-images', [TourPackageImageController::class, 'store']);
+
 Route::middleware('auth:sanctum')->get('/tour-packages/{tourPackageId}/images', [TourPackageImageController::class, 'index']);
 Route::middleware('auth:sanctum')->delete('/tour-package-images/{id}', [TourPackageImageController::class, 'destroy']);
+
+Route::middleware('auth:sanctum')->post('/tours', [TourController::class, 'store']);
+
+Route::middleware('auth:sanctum')->post('/tour-details', [TourDetailController::class, 'store']);

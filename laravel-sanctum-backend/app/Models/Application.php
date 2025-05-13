@@ -18,5 +18,6 @@ class Application extends Model
         'notes',
         'status',
     ];
+    static public $newApplication = "Новая";
 
 }
