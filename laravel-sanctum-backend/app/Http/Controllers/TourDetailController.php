@@ -9,12 +9,10 @@ use Illuminate\Support\Facades\Validator;
 
 class TourDetailController extends Controller
 {
-    // Метод для создания нового TourDetail
     public function store(Request $request, $tourId)
     {
         $tour = Tour::findOrFail($tourId);
 
-        // Валидация входных данных
         $validated = $request->validate([
             'room_class' => 'nullable|string|max:35',
             'age_limit' => 'nullable|string|max:35',
@@ -34,7 +32,6 @@ class TourDetailController extends Controller
             'visa_required' => 'nullable|in:yes,no',
         ]);
 
-        // Создание нового TourDetail для данного Tour
         $tourDetail = TourDetail::create([
             'tour_id' => $tour->id,
             'room_class' => $validated['room_class'] ?? null,
@@ -58,11 +55,10 @@ class TourDetailController extends Controller
         return response()->json($tourDetail, 201);
     }
 
-    // Метод для редактирования существующего TourDetail
     public function update(Request $request, $tourId)
     {
         $tour = Tour::findOrFail($tourId);
-        $tourDetail = $tour->detail; // Предполагаем, что уже существует связь с TourDetail
+        $tourDetail = $tour->detail;
 
         if (!$tourDetail) {
             return response()->json(['message' => 'Tour detail not found.'], 404);
@@ -88,13 +84,10 @@ class TourDetailController extends Controller
             'visa_required' => 'nullable|in:yes,no',
         ]);
 
-        // Обновляем поля, если они были переданы
         foreach ($validated as $key => $value) {
             if ($value !== null) {
-                // Если значение не null, обновляем поле
                 $tourDetail->$key = $value;
             } else {
-                // Если значение null, не обновляем поле
                 $tourDetail->$key = null;
             }
         }
@@ -104,7 +97,6 @@ class TourDetailController extends Controller
         return response()->json($tourDetail);
     }
 
-    // Метод для удаления TourDetail
     public function destroy($tourId)
     {
         $tour = Tour::findOrFail($tourId);

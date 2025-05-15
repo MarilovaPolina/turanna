@@ -3706,6 +3706,13 @@ b{
     align-items: center;
 }
 
+.divided_three_inputs{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.3rem;
+    align-items: center;
+}
+
 .tour_creation_inputs .form_group .admin_input{
     max-width: 100%;
 }

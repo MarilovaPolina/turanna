@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Validator;
 
 class TourController extends Controller
 {
-    // Создание нового тура
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -27,6 +26,8 @@ class TourController extends Controller
             'details' => 'nullable|array',
             'image_text_copyright' => 'nullable|string|max:40',
             'image_link_copyright' => 'nullable|string|max:255',
+            'tour_category' => 'required|string|max:25',
+            'article_number' => 'nullable|string|max:25',
         ]);
 
         if ($validator->fails()) {
@@ -60,7 +61,6 @@ class TourController extends Controller
         return response()->json($tour->load('details'), 201);
     }
 
-    // Обновление существующего тура
     public function update(Request $request, $id)
     {
         $tour = Tour::findOrFail($id);
@@ -79,6 +79,8 @@ class TourController extends Controller
             'details' => 'nullable|array',
             'image_text_copyright' => 'nullable|string|max:40',
             'image_link_copyright' => 'nullable|string|max:255',
+            'tour_category' => 'required|string|max:25',
+            'article_number' => 'nullable|string|max:25',
         ]);
 
         if ($validator->fails()) {
@@ -113,7 +115,6 @@ class TourController extends Controller
         return response()->json($tour->load('details'));
     }
 
-    // Удаление тура
     public function destroy($id)
     {
         $tour = Tour::findOrFail($id);
@@ -122,17 +123,14 @@ class TourController extends Controller
         return response()->json(['message' => 'Тур успешно удален.']);
     }
 
-    // Клонирование тура вместе с его деталями
     public function clone($id)
     {
         $tour = Tour::with('details')->findOrFail($id);
 
-        // Клонирование тура
         $newTour = $tour->replicate();
         $newTour->status = 'active';
         $newTour->save();
 
-        // Клонирование деталей тура, если они существуют
         if ($tour->details) {
             $newDetails = $tour->details->replicate();
             $newDetails->tour_id = $newTour->id;

@@ -1,9 +1,12 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import bedIcon from '../../../../assets/img/icons/bed.png';
 import uploadImageIcon from '../../../../assets/img/icons/upload_image.png';
 import TextEditor from '../../../common/TextEditor/TextEditor';
+import { createTourPackage } from '../../../../store/tourPackagesSlice';
 
 const AdminPanelCreateTourPackage = () => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = React.useState({
     package_name: '',
     departure_city: '',
@@ -21,24 +24,26 @@ const AdminPanelCreateTourPackage = () => {
         tour_nights: '',
         tour_price: '',
         price_type: 'per_person',
-        room_comfort: '',
+        room_class: '',
         age_limit: '',
         all_inclusive: '',
         hotel_link: '',
-        distance_to_center: '',
-        distance_to_airport: '',
-        distance_to_lift: '',
-        distance_to_nature: '',
-        distance_to_beach: '',
+        distance_center: '',
+        distance_airport: '',
+        distance_lift: '',
+        distance_nature: '',
+        distance_beach: '',
         beach_type: '',
-        child_care: '',
-        hotel_pool: '',
-        hotel_gym: '',
-        animals: '',
+        childcare: '',
+        pool: '',
+        gym: '',
+        pets_allowed: '',
         airline: '',
-        visa: '',
+        visa_required: '',
         image_text_copyright: '',
         image_link_copyright: '',
+        tour_category: '',
+        article_number: '',
       },
     ],
   });
@@ -100,24 +105,26 @@ const AdminPanelCreateTourPackage = () => {
           tour_nights: '',
           tour_price: '',
           price_type: 'per_person',
-          room_comfort: '',
+          room_class: '',
           age_limit: '',
           all_inclusive: '',
           hotel_link: '',
-          distance_to_center: '',
-          distance_to_airport: '',
-          distance_to_lift: '',
-          distance_to_nature: '',
-          distance_to_beach: '',
+          distance_center: '',
+          distance_airport: '',
+          distance_lift: '',
+          distance_nature: '',
+          distance_beach: '',
           beach_type: '',
-          child_care: '',
-          hotel_pool: '',
-          hotel_gym: '',
-          animals: '',
+          childcare: '',
+          pool: '',
+          gym: '',
+          pets_allowed: '',
           airline: '',
-          visa: '',
+          visa_required: '',
           image_text_copyright: '',
           image_link_copyright: '',
+          tour_category: '',
+          article_number: '',
         },
       ],
     });
@@ -137,16 +144,24 @@ const AdminPanelCreateTourPackage = () => {
   
     formData.tourVariants.forEach((variant, index) => {
       if (!variant.hotel_name) newErrors[`hotel_name_${index}`] = 'Обязательное поле';
-      if (!variant.departure_city) newErrors[`variant_departure_city_${index}`] = 'Обязательное поле';
-      if (!variant.arrival_city) newErrors[`variant_arrival_city_${index}`] = 'Обязательное поле';
       if (!variant.tour_start) newErrors[`tour_start_${index}`] = 'Обязательное поле';
       if (!variant.tour_finish) newErrors[`tour_finish_${index}`] = 'Обязательное поле';
       if (!variant.tour_nights) newErrors[`tour_nights_${index}`] = 'Обязательное поле';
+      if (variant.tour_nights<0) newErrors[`tour_nights_${index}`] = 'Количество ночей не может быть меньше ноля';
       if (!variant.tour_price) newErrors[`tour_price_${index}`] = 'Обязательное поле';
-      if (!variant.image_text_copyright) newErrors[`image_text_copyright_${index}`] = 'Обязательное поле';
-      if (!variant.image_link_copyright) newErrors[`image_link_copyright_${index}`] = 'Обязательное поле';
+      if (variant.tour_price<0) newErrors[`tour_price_${index}`] = 'Цена тура не может быть меньше ноля';
+      if (!variant.tour_category) newErrors[`tour_category_${index}`] = 'Обязательное поле';
       if (!variant.hotel_image) {
         imageErrorMessage = "Добавьте фото отеля к каждому варианту тура.";
+      }
+
+      if (variant.tour_start && variant.tour_finish) {
+        const startDate = new Date(variant.tour_start);
+        const finishDate = new Date(variant.tour_finish);
+      
+        if (finishDate <= startDate) {
+          newErrors[`tour_finish_${index}`] = 'Дата окончания должна быть позже даты начала';
+        }
       }
     });
   
@@ -184,9 +199,10 @@ const AdminPanelCreateTourPackage = () => {
         description: JSON.stringify(descriptionData),
       };
       console.log('Форма отправлена', formDataWithDescription);
-      // TODO: отправка на сервер
-    } else {
-      //console.warn("Форма содержит ошибки");
+      dispatch(createTourPackage(formDataWithDescription));
+    }
+    else{
+      setImageErrors("В полях есть ошибки. Исправьте ошибки и попробуйте сохранить еще раз.")
     }
   };
 
@@ -217,7 +233,7 @@ const AdminPanelCreateTourPackage = () => {
               onChange={handleInputChange}
               required
             />
-            {errors.package_name && <span className="error_text">{errors.package_name}</span>}
+            {errors.package_name && <span className="error_msg">{errors.package_name}</span>}
           </div>
 
           <div className="form_group">
@@ -233,7 +249,7 @@ const AdminPanelCreateTourPackage = () => {
               onChange={handleInputChange}
               required
             />
-            {errors.departure_city && <span className="error_text">{errors.departure_city}</span>}
+            {errors.departure_city && <span className="error_msg">{errors.departure_city}</span>}
           </div>
 
           <div className="form_group">
@@ -249,7 +265,7 @@ const AdminPanelCreateTourPackage = () => {
               onChange={handleInputChange}
               required
             />
-            {errors.arrival_city && <span className="error_text">{errors.arrival_city}</span>}
+            {errors.arrival_city && <span className="error_msg">{errors.arrival_city}</span>}
           </div>
 
           <div className="form_group">
@@ -339,14 +355,14 @@ const AdminPanelCreateTourPackage = () => {
                         required
                       />
                       {errors[`hotel_name_${index}`] && (
-                        <span className="error_text">{errors[`hotel_name_${index}`]}</span>
+                        <span className="error_msg">{errors[`hotel_name_${index}`]}</span>
                       )}
                     </div>
 
                     <div className="divided_two_inputs">
                       <div className="form_group">
                         <label htmlFor={`departure_city_${index}`}>
-                          Город отправления <span className="star">*</span>
+                          Город отправления 
                         </label>
                         <input
                           type="text"
@@ -357,17 +373,16 @@ const AdminPanelCreateTourPackage = () => {
                           name="departure_city"
                           value={variant.departure_city}
                           onChange={(e) => handleTourVariantChange(index, e)}
-                          required
                         />
                         {errors[`variant_departure_city_${index}`] && (
-                          <span className="error_text">
+                          <span className="error_msg">
                             {errors[`variant_departure_city_${index}`]}
                           </span>
                         )}
                       </div>
                       <div className="form_group">
                         <label htmlFor={`arrival_city_${index}`}>
-                          Город прибытия <span className="star">*</span>
+                          Город прибытия 
                         </label>
                         <input
                           type="text"
@@ -378,10 +393,9 @@ const AdminPanelCreateTourPackage = () => {
                           name="arrival_city"
                           value={variant.arrival_city}
                           onChange={(e) => handleTourVariantChange(index, e)}
-                          required
                         />
                         {errors[`variant_arrival_city_${index}`] && (
-                          <span className="error_text">
+                          <span className="error_msg">
                             {errors[`variant_arrival_city_${index}`]}
                           </span>
                         )}
@@ -404,7 +418,7 @@ const AdminPanelCreateTourPackage = () => {
                           required
                         />
                         {errors[`tour_start_${index}`] && (
-                          <span className="error_text">{errors[`tour_start_${index}`]}</span>
+                          <span className="error_msg">{errors[`tour_start_${index}`]}</span>
                         )}
                       </div>
                       <div className="form_group">
@@ -422,7 +436,7 @@ const AdminPanelCreateTourPackage = () => {
                           required
                         />
                         {errors[`tour_finish_${index}`] && (
-                          <span className="error_text">{errors[`tour_finish_${index}`]}</span>
+                          <span className="error_msg">{errors[`tour_finish_${index}`]}</span>
                         )}
                       </div>
                       <div className="form_group">
@@ -440,7 +454,7 @@ const AdminPanelCreateTourPackage = () => {
                           required
                         />
                         {errors[`tour_nights_${index}`] && (
-                          <span className="error_text">{errors[`tour_nights_${index}`]}</span>
+                          <span className="error_msg">{errors[`tour_nights_${index}`]}</span>
                         )}
                       </div>
                     </div>
@@ -461,7 +475,7 @@ const AdminPanelCreateTourPackage = () => {
                           required
                         />
                         {errors[`tour_price_${index}`] && (
-                          <span className="error_text">{errors[`tour_price_${index}`]}</span>
+                          <span className="error_msg">{errors[`tour_price_${index}`]}</span>
                         )}
                       </div>
 
@@ -493,8 +507,7 @@ const AdminPanelCreateTourPackage = () => {
                       
                       
                     </div>
-
-                    <div className="divided_two_inputs">
+                    <div className="divided_three_inputs">
                         <div className="form_group">
                           <label htmlFor={`image_text_copyright_${index}`}>
                             Автор фото
@@ -510,7 +523,7 @@ const AdminPanelCreateTourPackage = () => {
                             onChange={(e) => handleTourVariantChange(index, e)}
                           />
                           {errors[`variant_image_text_copyright_${index}`] && (
-                            <span className="error_text">
+                            <span className="error_msg">
                               {errors[`variant_image_text_copyright_${index}`]}
                             </span>
                           )}
@@ -531,10 +544,33 @@ const AdminPanelCreateTourPackage = () => {
                             onChange={(e) => handleTourVariantChange(index, e)}
                           />
                           {errors[`variant_image_link_copyright_${index}`] && (
-                            <span className="error_text">
+                            <span className="error_msg">
                               {errors[`variant_image_link_copyright_${index}`]}
                             </span>
                           )}
+                        </div>
+
+                        <div className="form_group">
+                          <label htmlFor={`tour_category_${index}`}>
+                              Тип тура <span className="star">*</span>
+                            </label>
+                            <select
+                              className="admin_input"
+                              name="tour_category"
+                              value={variant.tour_category}
+                              onChange={(e) => handleTourVariantChange(index, e)}
+                              required
+                            >
+                              <option value=""></option>
+                              <option value="Пляжный">Пляжный</option>
+                              <option value="Экскурсионный">Экскурсионный</option>
+                              <option value="Для школьников">Для школьников</option>
+                              <option value="Лечебный">Лечебный</option>
+                              <option value="Морской круиз">Морской круиз</option>
+                              <option value="Горнолыжный">Горнолыжный</option>
+                              <option value="Индивидуальный">Индивидуальный</option>
+                              <option value="Образование за рубежом">Образование за рубежом</option>
+                            </select>
                         </div>
                     </div>
                   </div>
@@ -544,15 +580,15 @@ const AdminPanelCreateTourPackage = () => {
                   <p className="substring">*Ненужные поля оставьте пустыми</p>
                   <div className="details_inputs_wrapper">
                     <div className="form_group">
-                      <label htmlFor={`room_comfort_${index}`}>
+                      <label htmlFor={`room_class_${index}`}>
                         <img src={bedIcon} alt="Кровать" />
                         Класс номера
                       </label>
                       <input
                         type="text"
                         className="admin_input"
-                        name="room_comfort"
-                        value={variant.room_comfort}
+                        name="room_class"
+                        value={variant.room_class}
                         onChange={(e) => handleTourVariantChange(index, e)}
                         maxLength="35"
                       />
@@ -585,8 +621,8 @@ const AdminPanelCreateTourPackage = () => {
                         onChange={(e) => handleTourVariantChange(index, e)}
                       >
                         <option value=""></option>
-                        <option value="есть">есть</option>
-                        <option value="нет">нет</option>
+                        <option value="yes">есть</option>
+                        <option value="no">нет</option>
                       </select>
                     </div>
 
@@ -605,75 +641,75 @@ const AdminPanelCreateTourPackage = () => {
                     </div>
 
                     <div className="form_group">
-                      <label htmlFor={`distance_to_center_${index}`}>
+                      <label htmlFor={`distance_center_${index}`}>
                         <img src={bedIcon} alt="Кровать" />
                         Расст. до центра
                       </label>
                       <input
                         type="text"
                         className="admin_input"
-                        name="distance_to_center"
-                        value={variant.distance_to_center}
+                        name="distance_center"
+                        value={variant.distance_center}
                         onChange={(e) => handleTourVariantChange(index, e)}
                         maxLength="35"
                       />
                     </div>
 
                     <div className="form_group">
-                      <label htmlFor={`distance_to_airport_${index}`}>
+                      <label htmlFor={`distance_airport_${index}`}>
                         <img src={bedIcon} alt="Кровать" />
                         Расст. до аэропорта
                       </label>
                       <input
                         type="text"
                         className="admin_input"
-                        name="distance_to_airport"
-                        value={variant.distance_to_airport}
+                        name="distance_airport"
+                        value={variant.distance_airport}
                         onChange={(e) => handleTourVariantChange(index, e)}
                         maxLength="35"
                       />
                     </div>
 
                     <div className="form_group">
-                      <label htmlFor={`distance_to_lift_${index}`}>
+                      <label htmlFor={`distance_lift_${index}`}>
                         <img src={bedIcon} alt="Кровать" />
                         Расст. до подъемника
                       </label>
                       <input
                         type="text"
                         className="admin_input"
-                        name="distance_to_lift"
-                        value={variant.distance_to_lift}
+                        name="distance_lift"
+                        value={variant.distance_lift}
                         onChange={(e) => handleTourVariantChange(index, e)}
                         maxLength="35"
                       />
                     </div>
 
                     <div className="form_group">
-                      <label htmlFor={`distance_to_nature_${index}`}>
+                      <label htmlFor={`distance_nature_${index}`}>
                         <img src={bedIcon} alt="Кровать" />
                         Расст. до природ объекта
                       </label>
                       <input
                         type="text"
                         className="admin_input"
-                        name="distance_to_nature"
-                        value={variant.distance_to_nature}
+                        name="distance_nature"
+                        value={variant.distance_nature}
                         onChange={(e) => handleTourVariantChange(index, e)}
                         maxLength="35"
                       />
                     </div>
 
                     <div className="form_group">
-                      <label htmlFor={`distance_to_beach_${index}`}>
+                      <label htmlFor={`distance_beach_${index}`}>
                         <img src={bedIcon} alt="Кровать" />
                         Расст. до пляжа
                       </label>
                       <input
                         type="text"
                         className="admin_input"
-                        name="distance_to_beach"
-                        value={variant.distance_to_beach}
+                        name="distance_beach"
+                        value={variant.distance_beach}
                         onChange={(e) => handleTourVariantChange(index, e)}
                         maxLength="35"
                       />
@@ -700,72 +736,72 @@ const AdminPanelCreateTourPackage = () => {
                     </div>
 
                     <div className="form_group">
-                      <label htmlFor={`child_care_${index}`}>
+                      <label htmlFor={`childcare_${index}`}>
                         <img src={bedIcon} alt="Кровать" />
                         Няня для детей
                       </label>
                       <select
                         className="admin_input"
-                        name="child_care"
-                        value={variant.child_care}
+                        name="childcare"
+                        value={variant.childcare}
                         onChange={(e) => handleTourVariantChange(index, e)}
                       >
                         <option value=""></option>
-                        <option value="нет">нет</option>
-                        <option value="есть">есть</option>
-                        <option value="есть (платно)">есть (платно)</option>
-                        <option value="есть (бесплатно)">есть (бесплатно)</option>
+                        <option value="no">нет</option>
+                        <option value="yes">есть</option>
+                        <option value="yes_paid">есть (платно)</option>
+                        <option value="yes_free">есть (бесплатно)</option>
                       </select>
                     </div>
 
                     <div className="form_group">
-                      <label htmlFor={`hotel_pool_${index}`}>
+                      <label htmlFor={`pool_${index}`}>
                         <img src={bedIcon} alt="Кровать" />
                         Бассейн отеля
                       </label>
                       <select
                         className="admin_input"
-                        name="hotel_pool"
-                        value={variant.hotel_pool}
+                        name="pool"
+                        value={variant.pool}
                         onChange={(e) => handleTourVariantChange(index, e)}
                       >
                         <option value=""></option>
-                        <option value="есть">есть</option>
-                        <option value="нет">нет</option>
+                        <option value="yes">есть</option>
+                        <option value="no">нет</option>
                       </select>
                     </div>
 
                     <div className="form_group">
-                      <label htmlFor={`hotel_gym_${index}`}>
+                      <label htmlFor={`gym_${index}`}>
                         <img src={bedIcon} alt="Кровать" />
                         Тренажерный зал отеля
                       </label>
                       <select
                         className="admin_input"
-                        name="hotel_gym"
-                        value={variant.hotel_gym}
+                        name="gym"
+                        value={variant.gym}
                         onChange={(e) => handleTourVariantChange(index, e)}
                       >
                         <option value=""></option>
-                        <option value="есть">есть</option>
-                        <option value="нет">нет</option>
+                        <option value="yes">есть</option>
+                        <option value="no">нет</option>
                       </select>
                     </div>
 
                     <div className="form_group">
-                      <label htmlFor={`animals_${index}`}>
+                      <label htmlFor={`pets_allowed_${index}`}>
                         <img src={bedIcon} alt="Кровать" />
                         Животные
                       </label>
                       <select
                         className="admin_input"
-                        name="animals"
-                        value={variant.animals}
+                        name="pets_allowed"
+                        value={variant.pets_allowed}
                         onChange={(e) => handleTourVariantChange(index, e)}
                       >
                         <option value=""></option>
-                        <option value="нельзя">нельзя</option>
-                        <option value="можно">можно</option>
+                        <option value="no">нельзя</option>
+                        <option value="yes">можно</option>
                       </select>
                     </div>
 
@@ -785,19 +821,19 @@ const AdminPanelCreateTourPackage = () => {
                     </div>
 
                     <div className="form_group">
-                      <label htmlFor={`visa_${index}`}>
+                      <label htmlFor={`visa_required_${index}`}>
                         <img src={bedIcon} alt="Кровать" />
                         Виза
                       </label>
                       <select
                         className="admin_input"
-                        name="visa"
-                        value={variant.visa}
+                        name="visa_required"
+                        value={variant.visa_required}
                         onChange={(e) => handleTourVariantChange(index, e)}
                       >
                         <option value=""></option>
-                        <option value="Нужна">Нужна</option>
-                        <option value="Не нужна">Не нужна</option>
+                        <option value="yes">Нужна</option>
+                        <option value="no">Не нужна</option>
                       </select>
                     </div>
                   </div>

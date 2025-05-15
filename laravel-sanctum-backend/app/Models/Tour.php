@@ -23,6 +23,8 @@ class Tour extends Model
         'status',
         'image_text_copyright',
         'image_link_copyright',
+        'tour_category',
+        'article_number',
     ];
 
     protected $casts = [

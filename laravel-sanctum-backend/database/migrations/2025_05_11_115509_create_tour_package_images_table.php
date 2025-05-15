@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('tour_package_images', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedInteger('id')->autoIncrement();
             $table->unsignedInteger('tour_package_id');
             $table->string('image_path');
             $table->timestamps();

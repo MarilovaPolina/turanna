@@ -16,6 +16,7 @@ class TourDetail extends Model
         'airline',
         'distance_airport',
         'distance_lift',
+        'distance_center',
         'distance_beach',
         'distance_nature',
         'beach_type',

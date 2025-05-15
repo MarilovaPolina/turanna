@@ -14,12 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('tours', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedInteger('id')->autoIncrement();
             $table->unsignedInteger('tour_package_id');
             $table->string('hotel_name', 35);
             $table->string('hotel_image')->nullable();
-            $table->string('departure_city', 25);
-            $table->string('arrival_city', 25);
+            $table->string('departure_city', 25)->nullable();
+            $table->string('arrival_city', 25)->nullable();
             $table->date('start_date');
             $table->unsignedInteger('nights');
             $table->decimal('price', 10, 2);
@@ -28,6 +28,8 @@ return new class extends Migration
             $table->enum('status', ['active', 'expired']);
             $table->string('image_text_copyright', 40)->nullable();
             $table->string('image_link_copyright')->nullable();
+            $table->string('tour_category', 25);
+            $table->string('article_number', 25)->nullable();
             $table->timestamps();
 
             $table->foreign('tour_package_id')->references('id')->on('tour_packages')->onDelete('cascade');

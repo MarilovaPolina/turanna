@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('tour_details', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedInteger('id')->autoIncrement();
             $table->unsignedInteger('tour_id')->unique();
 
             $table->string('room_class', 35)->nullable();
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('distance_nature', 35)->nullable();
             $table->string('beach_type', 35)->nullable();
             $table->enum('pets_allowed', ['yes', 'no'])->nullable();
-            $table->enum('childcare', ['no', 'yes_paid', 'yes_free'])->nullable();
+            $table->enum('childcare', ['no', 'yes_paid', 'yes_free', 'yes'])->nullable();
             $table->enum('pool', ['yes', 'no'])->nullable();
             $table->enum('gym', ['yes', 'no'])->nullable();
             $table->string('hotel_link', 35)->nullable();

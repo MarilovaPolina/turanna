@@ -51,10 +51,6 @@ export const updateArticle = createAsyncThunk(
   'article/updateArticle',
   async({articleId, formData}, {rejectWithValue, getState}) => {
     try{
-      console.log("ЩА БУДЕМ ЛОГИРОВАТЬ");
-        formData.forEach((value, key) => {
-          console.log("ЛОГИРУЕМ ИЗ РЕДАКС", key, value);
-        });
       formData.append('_method', 'PUT');
       const { auth } = getState();
       const { data } = await axios.post(

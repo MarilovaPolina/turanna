@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\TourPackage;
 use App\Models\Tour;
@@ -35,11 +36,13 @@ class TourPackageController extends Controller
 
     public function store(Request $request)
     {
+        Log::info('Начало создания тура', ['input' => $request->all()]);
+
         $validated = $request->validate([
             'title' => 'required|string|max:40',
             'departure_city' => 'required|string|max:25',
             'arrival_city' => 'required|string|max:25',
-            'description' => 'required|array',
+            'description' => 'required',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg|max:8192',
         ]);
 
@@ -47,7 +50,7 @@ class TourPackageController extends Controller
 
         try {
             $data = $validated;
-            $data['description'] = json_encode($validated['description']);
+            $data['description'] = $request->input('description');
 
             if ($request->hasFile('main_image')) {
                 $path = $request->file('main_image')->store('public/tour_packages/images');
@@ -67,9 +70,8 @@ class TourPackageController extends Controller
 
             $tourPackage = TourPackage::create($data);
 
-            // Если есть изображения галереи
-            if ($request->has('gallery')) {
-                foreach ($request->gallery as $imageFile) {
+            if ($request->hasFile('gallery')) {
+                foreach ($request->file('gallery') as $imageFile) {
                     $path = $imageFile->store('public/tour_packages/gallery');
                     TourPackageImage::create([
                         'tour_package_id' => $tourPackage->id,
@@ -78,27 +80,45 @@ class TourPackageController extends Controller
                 }
             }
 
-            // Если есть туры
-            if ($request->has('tours')) {
-                foreach ($request->tours as $tourData) {
-                    $tourData['tour_package_id'] = $tourPackage->id;
-                    $tour = Tour::create($tourData);
+            $hotelImages = $request->file('hotel_images', []);
+            if (!is_array($hotelImages)) {
+                $hotelImages = [$hotelImages];
+            }
 
-                    if (isset($tourData['details'])) {
-                        $details = $tourData['details'];
-                        $details['tour_id'] = $tour->id;
-                        TourDetail::create($details);
-                    }
+            $toursData = json_decode($request->input('tours'), true);
+
+            foreach ($toursData as $index => $tourData) {
+                $tourData['tour_package_id'] = $tourPackage->id;
+
+                if (isset($hotelImages[$index])) {
+                    $hotelImagePath = $hotelImages[$index]->store('public/tours/hotels');
+                    $tourData['hotel_image'] = Storage::url($hotelImagePath);
+                }
+
+                $details = $tourData['details'] ?? null;
+                unset($tourData['details']);
+
+                $tour = Tour::create($tourData);
+
+                if ($details) {
+                    $details['tour_id'] = $tour->id;
+                    TourDetail::create($details);
                 }
             }
 
             DB::commit();
+
             return response()->json($tourPackage->load(['images', 'tours.details']), 201);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+            Log::error('Ошибка при создании турпакета', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return response()->json(['error' => 'Ошибка сервера: ' . $e->getMessage()], 500);
         }
     }
+
 
     public function update(Request $request, $id)
     {
@@ -107,14 +127,14 @@ class TourPackageController extends Controller
             'title' => 'required|string|max:40',
             'departure_city' => 'required|string|max:25',
             'arrival_city' => 'required|string|max:25',
-            'description' => 'required|array',
+            'description' => 'required',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg|max:8192',
         ]);
 
         DB::beginTransaction();
         try {
             $data = $validated;
-            $data['description'] = json_encode($validated['description']);
+            $data['description'] = $request->input('description');
 
             if ($request->hasFile('main_image')) {
                 $path = $request->file('main_image')->store('public/tour_packages/images');
@@ -134,7 +154,6 @@ class TourPackageController extends Controller
 
             $tourPackage->update($data);
 
-            // Обновление туров и деталей
             if ($request->has('tours')) {
                 foreach ($request->tours as $tourData) {
                     if (isset($tourData['id'])) {
@@ -174,6 +193,6 @@ class TourPackageController extends Controller
     {
         $tourPackage = TourPackage::findOrFail($id);
         $tourPackage->delete();
-        return response()->json(['message' => 'Tour package deleted']);
+        return response()->json(['message' => 'Туристическая подборка удалена.']);
     }
 }
