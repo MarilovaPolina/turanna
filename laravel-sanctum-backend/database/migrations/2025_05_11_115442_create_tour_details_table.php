@@ -19,7 +19,7 @@ return new class extends Migration
 
             $table->string('room_class', 35)->nullable();
             $table->string('age_limit', 35)->nullable();
-            $table->enum('all_inclusive', ['yes', 'no'])->nullable();
+            $table->enum('all_inclusive', ['ultra_all_in', 'all_in', 'full_package', 'half_board', 'breakfast', 'flgt_accmd', 'accmd', 'flgt_excursion', 'excursion', 'custom'])->nullable();
             $table->string('airline', 35)->nullable();
             $table->string('distance_airport', 35)->nullable();
             $table->string('distance_lift', 35)->nullable();

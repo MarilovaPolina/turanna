@@ -107,6 +107,15 @@ a{
     color: var(--red);
 }
 
+.cancel_btn{
+    padding: 0 2rem;
+    text-decoration: underline;
+    transition: all 0.2s;
+}
+.cancel_btn:hover{
+    color: var(--black-text);
+}
+
 
 
 

@@ -24,7 +24,9 @@ const EditorContentPreview = ({ content }) => {
     })
     .join(' ');
 
-  const noHtml = textOnly.replace(/<\/?[^>]+(>|$)/g, '');
+  const noHtml = textOnly
+    .replace(/<\/?[^>]+(>|$)/g, '')
+    .replace(/&nbsp;/g, ' ');
 
   const sliced = noHtml.slice(0, 200);
 
@@ -37,4 +39,3 @@ const EditorContentPreview = ({ content }) => {
 };
 
 export default EditorContentPreview;
-

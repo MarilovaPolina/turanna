@@ -1,5 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 import MainPostCard from './MainPostCard';
 import TourPostCard from './TourPostCard';
@@ -13,6 +15,7 @@ function PostsSection() {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
   const [isMobile, setIsMobile] = React.useState(false);
+  const [posts, setPosts] = React.useState([]);
 
   React.useEffect(() => {
     const checkScreenSize = () => setIsMobile(window.innerWidth < 570);
@@ -20,89 +23,25 @@ function PostsSection() {
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
-
-  const posts = [
-    {
-      id: 1,
-      title: 'Египет',
-      price: '258 200',
-      image: mountainImg,
-      description: 'Подборка для 2-х взрослых с вылетом из Казани, все включено!',
-      dates: '30 окт / 20 нояб / 30 дек',
-      nights: '9 ночей',
-      route: 'Казань → Хургада',
-      date: '30 октября',
-      type: 'tour',
-    },
-    {
-      id: 2,
-      title: 'Шри-Ланка',
-      price: '258 200',
-      image: mountainImg,
-      route: 'Казань → Хамбантота',
-      date: '18 января',
-      nights: '9 ночей',
-      type: 'tour',
-    },
-    {
-      id: 3,
-      title: 'Турция',
-      price: '187 500',
-      image: mountainImg,
-      route: 'Казань → Анталия',
-      date: '15 февраля',
-      nights: '7 ночей',
-      type: 'tour',
-    },
-   
-    {
-      id: 5,
-      title: 'Почему стоит бронировать туры заранее?',
-      publication_date: '30.10.2024',
-      image: mountainImg,
-      description: 'Подборка для 2-х взрослых с вылетом из Казани, все включено! Отели, которые регулярно выбирают наши туристы. Отели, которые регулярно выбирают наши туристы. Для бронирования оставьте ...',
-      type: 'article',
-    },
-    /*
-    {
-      id: 6,
-      title: 'ОАЭ',
-      price: '324 800',
-      image: mountainImg,
-      route: 'Казань → Дубай',
-      description: "Подборка для 2-х взрослых с вылетом из Казани, все включено! Отели, которые регулярно выбирают наши туристы. Отели, которые регулярно выбирают наши туристы. Для бронирования оставьте ...",
-      date: '10 марта',
-      nights: '8 ночей',
-      type: 'tour',
-    },
     
-    {
-      id: 8,
-      type: 'variable',
-      title: 'Египет',
-      price: '258 200 ₽',
-      image: mountainImg,
-      description: 'Подборка для 2-х взрослых с вылетом из Казани...',
-      date: ['30 окт', '20 нояб', '30 дек'],
-      nights: ['9 ночей', '7 ночей', '8 ночей'],
-      route: 'Казань → Шарм-эль-Шейх',
-      variants: [
-        { date: '30.10.2024', nights: '9 ночей', price: '258 тыс. ₽' },
-        { date: '20.11.2024', nights: '7 ночей', price: '245 тыс. ₽' },
-        { date: '20.11.2024', nights: '7 ночей', price: '245 тыс. ₽' },
-        { date: '20.11.2024', nights: '7 ночей', price: '245 тыс. ₽' },
-      ]
-    },*/
-    
-  ];
+  React.useEffect(() => {
+    axios.get('http://localhost:8000/api/posts-content')
+      .then(res => setPosts(res.data))
+  }, [])
 
-  const sortedPosts = [...posts].sort((a, b) => b.id - a.id);
+
+  //const sortedPosts = [...posts].sort((a, b) => b.id - a.id);
   const showMainCard = isHomePage && !isMobile;
   const cardCount = isMobile ? 4 : 5;
 
-  const displayedPosts = showMainCard
-    ? [sortedPosts[0], ...sortedPosts.slice(1, cardCount)]
-    : sortedPosts.slice(0, cardCount);
+  const displayedPosts = posts.length === 0
+    ? []
+    : showMainCard
+      ? [posts[0], ...posts.slice(1, cardCount)]
+      : posts.slice(0, cardCount);
+ 
+console.log(posts)
+
 
   return (
     <div className="posts_block">
@@ -116,7 +55,7 @@ function PostsSection() {
         
         <div className="posts">
           <div className="posts_container">
-          {displayedPosts.map((post, index) => {
+          {displayedPosts ? displayedPosts.map((post, index) => {
             if (showMainCard && index === 0) {
               return <MainPostCard key={post.id} post={post} />;
             }
@@ -128,7 +67,7 @@ function PostsSection() {
             ) : (
               <TourPostCard key={post.id} post={post} isMainCard={false} />
             );
-          })}
+          }) : <p>Здесь пока нет контента...</p>}
           </div>
           
           <a href="#" className="more_posts">

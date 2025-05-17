@@ -36,7 +36,6 @@ class TourPackageController extends Controller
 
     public function store(Request $request)
     {
-        Log::info('Начало создания тура', ['input' => $request->all()]);
 
         $validated = $request->validate([
             'title' => 'required|string|max:40',
@@ -122,7 +121,13 @@ class TourPackageController extends Controller
 
     public function update(Request $request, $id)
     {
+
+        Log::debug('Request data:', $request->all());
+        Log::debug('Files:', $request->file() ? array_keys($request->file()) : ['no files']);
+        Log::debug('Tours input:', ['tours' => $request->input('tours')]);
+
         $tourPackage = TourPackage::findOrFail($id);
+
         $validated = $request->validate([
             'title' => 'required|string|max:40',
             'departure_city' => 'required|string|max:25',
@@ -154,14 +159,29 @@ class TourPackageController extends Controller
 
             $tourPackage->update($data);
 
-            if ($request->has('tours')) {
-                foreach ($request->tours as $tourData) {
+            $toursRaw = $request->input('tours');
+
+            $tours = json_decode($toursRaw, true);
+            if (!is_array($tours)) {
+                return response()->json(['error' => 'Некорректный формат данных "tours"'], 422);
+            }
+
+            if (is_array($tours)) {
+                foreach ($tours as $index => $tourData) {
                     if (isset($tourData['id'])) {
                         $tour = Tour::findOrFail($tourData['id']);
+
+                        $details = $tourData['details'] ?? null;
+                        unset($tourData['details']);
+
+                        if ($request->hasFile("hotel_image_$index")) {
+                            $hotelImagePath = $request->file("hotel_image_$index")->store('public/hotel_images');
+                            $tourData['hotel_image'] = Storage::url($hotelImagePath);
+                        }
+
                         $tour->update($tourData);
 
-                        if (isset($tourData['details'])) {
-                            $details = $tourData['details'];
+                        if ($details) {
                             if ($tour->details) {
                                 $tour->details->update($details);
                             } else {
@@ -170,14 +190,33 @@ class TourPackageController extends Controller
                             }
                         }
                     } else {
+                        $details = $tourData['details'] ?? null;
+                        unset($tourData['details']);
+
+                        if ($request->hasFile("hotel_image_$index")) {
+                            $hotelImagePath = $request->file("hotel_image_$index")->store('public/hotel_images');
+                            $tourData['hotel_image'] = Storage::url($hotelImagePath);
+                        }
+
                         $tourData['tour_package_id'] = $tourPackage->id;
                         $tour = Tour::create($tourData);
-                        if (isset($tourData['details'])) {
-                            $details = $tourData['details'];
+
+                        if ($details) {
                             $details['tour_id'] = $tour->id;
                             TourDetail::create($details);
                         }
                     }
+                }
+
+            }
+
+            if ($request->hasFile('gallery')) {
+                foreach ($request->file('gallery') as $imageFile) {
+                    $path = $imageFile->store('public/tour_packages/gallery');
+                    TourPackageImage::create([
+                        'tour_package_id' => $tourPackage->id,
+                        'image_path' => Storage::url($path)
+                    ]);
                 }
             }
 
@@ -185,6 +224,10 @@ class TourPackageController extends Controller
             return response()->json($tourPackage->load(['images', 'tours.details']));
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Ошибка при обновлении турпакета', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }

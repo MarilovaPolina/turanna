@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\InfoSheetController;
+use App\Http\Controllers\PostsController;
 use App\Http\Controllers\TourController;
 use App\Http\Controllers\TourDetailController;
 use App\Http\Controllers\TourPackageController;
@@ -59,26 +60,25 @@ Route::middleware('auth:sanctum')->post('/applications/{id}/document', [Applicat
 Route::middleware('auth:sanctum')->get('/applications/{id}', [ApplicationController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    // Турпакеты
     Route::get('/tour-packages', [TourPackageController::class, 'index']);
     Route::post('/tour-packages', [TourPackageController::class, 'store']);
     Route::get('/tour-packages/{id}', [TourPackageController::class, 'show']);
-    Route::put('/tour-packages/{id}', [TourPackageController::class, 'update']);
+    Route::match(['post', 'put'], '/tour-packages/{id}', [TourPackageController::class, 'update']);
     Route::delete('/tour-packages/{id}', [TourPackageController::class, 'destroy']);
 
-    // Тур изображения
     Route::post('/tour-packages/{tourPackageId}/images', [TourPackageImageController::class, 'store']);
     Route::get('/tour-packages/{tourPackageId}/images', [TourPackageImageController::class, 'index']);
     Route::delete('/tour-packages/images/{id}', [TourPackageImageController::class, 'destroy']);
 
-    // Туры
     Route::post('/tours', [TourController::class, 'store']);
     Route::put('/tours/{id}', [TourController::class, 'update']);
     Route::delete('/tours/{id}', [TourController::class, 'destroy']);
     Route::post('/tours/{id}/clone', [TourController::class, 'clone']);
+    Route::get('/tours', [TourController::class, 'index']);
 
-    // Детали тура
     Route::post('/tours/{tourId}/details', [TourDetailController::class, 'store']);
     Route::put('/tours/{tourId}/details', [TourDetailController::class, 'update']);
     Route::delete('/tours/{tourId}/details', [TourDetailController::class, 'destroy']);
 });
+
+Route::get('/posts-content', [PostsController::class, 'index']);

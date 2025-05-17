@@ -1,56 +1,87 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import bedIcon from '../../../../assets/img/icons/bed.png';
-import uploadImageIcon from '../../../../assets/img/icons/upload_image.png';
-import TextEditor from '../../../common/TextEditor/TextEditor';
+import { useParams } from 'react-router-dom';
 import {
-  createTourPackage,
-  addTourVariant,
-  removeTourVariant,
-  copyTourVariant,
-  updateTourVariantField,
+  getTourPackageById,
+  updateTourPackage,
   resetSuccess,
 } from '../../../../store/tourPackagesSlice';
+import TextEditor from '../../../common/TextEditor/TextEditor';
 import TourVariantDetails from './TourVariantDetails';
 import HotelImageUploader from './HotelImageUploader';
 
-const AdminPanelCreateTourPackage = () => {
+import bedIcon from '../../../../assets/img/icons/bed.png';
+import uploadImageIcon from '../../../../assets/img/icons/upload_image.png';
+
+const AdminPanelEditTourPackage = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const dispatch = useDispatch();
+  const editorRef = React.useRef(null);
   const [errors, setErrors] = React.useState({});
+  const { loading, error, selectedPackage, success } = useSelector((state) => state.tourPackage);
   const [imageErrors, setImageErrors] = React.useState('');
   const [submitError, setSubmitError] = React.useState('');
-  const tourVariants = useSelector((state) => state.tourPackage.tourVariants);
-  const [hotelImages, setHotelImages] = React.useState([]);
-  const { error, success, loading } = useSelector((state) => state.tourPackage);
-
-  const [descriptionData, setDescriptionData] = React.useState({
-    time: new Date().getTime(),
-    blocks: [],
-  });
-
-  React.useEffect(() => {
-    dispatch(resetSuccess());
-  }, [dispatch]);
 
   const [formData, setFormData] = React.useState({
     package_name: '',
     departure_city: '',
     arrival_city: '',
     description: '',
+    editorData: null,
+    initialData: null,
     galleryImages: [],
+    tourVariants: [],
+    hotelImages: [],
   });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  React.useEffect(() => {
+    dispatch(resetSuccess());
+    dispatch(getTourPackageById(id)).then((res) => {
+      const data = res.payload;
+      const parsedDescription =
+        typeof data.description === 'string' ? JSON.parse(data.description) : data.description;
+
+      const hotelImages = data.tours.map((tour) => ({
+        preview: `http://localhost:8000${tour.hotel_image}`,
+        id: tour.id,
+      }));
+
+      setFormData({
+        package_name: data.title,
+        departure_city: data.departure_city,
+        arrival_city: data.arrival_city,
+        description: parsedDescription,
+        editorData: parsedDescription,
+        initialData: parsedDescription,
+        galleryImages: data.images.map((img) => ({ preview: img.image_path, id: img.id })),
+        tourVariants: data.tours.map((tour) => ({
+          ...tour,
+          ...tour.details,
+          id: tour.id,
+          tour_start: tour.start_date?.slice(0, 10),
+          tour_finish: tour.end_date?.slice(0, 10),
+          tour_nights: tour.nights,
+          tour_price: tour.price,
+          file: null,
+        })),
+        hotelImages,
+      });
+    });
+  }, [dispatch, id]);
+
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleEditorChange = (newData) => {
+    setFormData((prev) => ({ ...prev, editorData: newData }));
   };
 
   const handleGalleryImagesChange = (e) => {
     const files = Array.from(e.target.files);
     let hasError = false;
-
     const newImages = [];
 
     files.forEach((file) => {
@@ -72,29 +103,96 @@ const AdminPanelCreateTourPackage = () => {
     }
 
     if (newImages.length > 0) {
-      setFormData({
-        ...formData,
-        galleryImages: [...formData.galleryImages, ...newImages],
-      });
+      setFormData((prev) => ({
+        ...prev,
+        galleryImages: [...prev.galleryImages, ...newImages],
+      }));
     }
-  };
-
-  const handleTourVariantChange = (index, e) => {
-    const { name, value } = e.target;
-    dispatch(updateTourVariantField({ index, field: name.replace(`_${index}`, ''), value }));
   };
 
   const handleHotelImageChange = (index, e) => {
     const file = e.target.files[0];
-
     if (!file) return;
 
-    const updated = [...hotelImages];
-    updated[index] = {
-      file,
-      preview: URL.createObjectURL(file),
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const updatedImages = [...formData.hotelImages];
+      updatedImages[index] = {
+        file,
+        preview: reader.result,
+      };
+      setFormData((prev) => ({
+        ...prev,
+        hotelImages: updatedImages,
+      }));
     };
-    setHotelImages(updated);
+    reader.readAsDataURL(file);
+  };
+
+  const addTourVariant = () => {
+    setFormData((prev) => ({
+      ...prev,
+      tourVariants: [
+        ...prev.tourVariants,
+        {
+          hotel_name: '',
+          hotel_image: null,
+          departure_city: '',
+          arrival_city: '',
+          arrival_country: '',
+          tour_start: '',
+          tour_finish: '',
+          tour_nights: '',
+          tour_price: '',
+          price_type: 'per_person',
+          status: 'active',
+          image_text_copyright: '',
+          image_link_copyright: '',
+          tour_category: '',
+          article_number: '',
+          room_class: '',
+          age_limit: '',
+          all_inclusive: '',
+          hotel_link: '',
+          distance_center: '',
+          distance_airport: '',
+          distance_lift: '',
+          distance_nature: '',
+          distance_beach: '',
+          beach_type: '',
+          childcare: '',
+          pool: '',
+          gym: '',
+          pets_allowed: '',
+          airline: '',
+          visa_required: '',
+        },
+      ],
+    }));
+  };
+
+  const removeTourVariant = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      tourVariants: prev.tourVariants.filter((_, i) => i !== index),
+    }));
+  };
+
+  const copyTourVariant = (index) => {
+    const toCopy = { ...formData.tourVariants[index] };
+    delete toCopy.id;
+
+    setFormData((prev) => ({
+      ...prev,
+      tourVariants: [...prev.tourVariants, toCopy],
+    }));
+  };
+
+  const handleTourVariantChange = (index, e) => {
+    const { name, value } = e.target;
+    const updated = [...formData.tourVariants];
+    updated[index][name] = value;
+    setFormData({ ...formData, tourVariants: updated });
   };
 
   const validateForm = () => {
@@ -109,11 +207,11 @@ const AdminPanelCreateTourPackage = () => {
       imageErrorMessage = 'Добавьте хотя бы 1 фото в галерею изображений.';
     }
 
-    if (tourVariants.length < 1) {
+    if (formData.tourVariants.length < 1) {
       imageErrorMessage =
         'Добавьте хотя бы один тур в подборку. Если вам не нужно опубликовать тур, вы можете создать статью.';
     } else {
-      tourVariants.forEach((variant, index) => {
+      formData.tourVariants.forEach((variant, index) => {
         if (!variant.hotel_name) newErrors[`hotel_name_${index}`] = 'Обязательное поле';
         if (!variant.tour_start) newErrors[`tour_start_${index}`] = 'Обязательное поле';
         if (!variant.tour_finish) newErrors[`tour_finish_${index}`] = 'Обязательное поле';
@@ -124,7 +222,11 @@ const AdminPanelCreateTourPackage = () => {
         if (variant.tour_price < 0)
           newErrors[`tour_price_${index}`] = 'Цена тура не может быть меньше ноля';
         if (!variant.tour_category) newErrors[`tour_category_${index}`] = 'Обязательное поле';
-        if (!hotelImages[index] || !hotelImages[index].file) {
+
+        if (
+          !formData.hotelImages[index] ||
+          (!formData.hotelImages[index].file && !formData.hotelImages[index].preview)
+        ) {
           if (!imageErrorMessage) {
             imageErrorMessage = 'Добавьте фото отеля к каждому варианту тура.';
           }
@@ -140,13 +242,14 @@ const AdminPanelCreateTourPackage = () => {
         }
       });
     }
+
     setErrors(newErrors);
     setImageErrors(imageErrorMessage);
 
     return Object.keys(newErrors).length === 0 && !imageErrorMessage;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
     setImageErrors('');
@@ -161,35 +264,31 @@ const AdminPanelCreateTourPackage = () => {
       }
       return;
     }
-
-    const fullData = {
-      ...formData,
-      description: descriptionData,
-      hotelImages,
-      tourVariants,
-    };
-
-    try {
-      const result = await dispatch(createTourPackage(fullData)).unwrap();
-    } catch (error) {
-      if (typeof error === 'string' && error.includes('The main image must be a file of type')) {
-        setSubmitError(
-          'Недопустимый формат одного из изображений. Разрешены только: JPEG, PNG, JPG, SVG. Попробуйте пересохранить изображение или выбрать другое.',
-        );
-      } else {
-        setSubmitError(error || 'Ошибка при сохранении. Пожалуйста, попробуйте позже.');
+    dispatch(
+      updateTourPackage({ id, formState: { ...formData, description: formData.editorData } }),
+    ).then((result) => {
+      if (result.error) {
+        if (
+          typeof result.error === 'string' &&
+          result.error.includes('The main image must be a file of type')
+        ) {
+          setSubmitError(
+            'Недопустимый формат одного из изображений. Разрешены только: JPEG, PNG, JPG, SVG. Попробуйте пересохранить изображение или выбрать другое.',
+          );
+        } else {
+          setSubmitError(result.error || 'Ошибка при сохранении. Пожалуйста, попробуйте позже.');
+        }
       }
-    }
+    });
   };
 
   return (
     <div className="admin_panel_content">
       <div className="creation_heading">
-        <p className="small_title_text">Создать подборку туров</p>
+        <p className="small_title_text">Редактирование туристической подборки</p>
         <p className="creation_heading_subtitle">
-          Создайте туристическую подборку, включающую один или несколько вариантов путешествий.
-          Добавьте описание и загрузите фото в слайдер изображений, чтобы сделать подборку
-          привлекательной и полезной для клиентов.
+          Вы можете удалить или изменить туры в подборке, изменить описание самой туристической
+          подборки или добавить в нее новые фото.
         </p>
       </div>
 
@@ -207,7 +306,7 @@ const AdminPanelCreateTourPackage = () => {
               name="package_name"
               maxLength="40"
               value={formData.package_name}
-              onChange={handleInputChange}
+              onChange={(e) => handleChange('package_name', e.target.value)}
               required
             />
             {errors.package_name && <span className="error_msg">{errors.package_name}</span>}
@@ -223,7 +322,7 @@ const AdminPanelCreateTourPackage = () => {
               placeholder="Город отправления"
               name="departure_city"
               value={formData.departure_city}
-              onChange={handleInputChange}
+              onChange={(e) => handleChange('departure_city', e.target.value)}
               required
             />
             {errors.departure_city && <span className="error_msg">{errors.departure_city}</span>}
@@ -239,22 +338,23 @@ const AdminPanelCreateTourPackage = () => {
               placeholder="Город прибытия"
               name="arrival_city"
               value={formData.arrival_city}
-              onChange={handleInputChange}
+              onChange={(e) => handleChange('arrival_city', e.target.value)}
               required
             />
             {errors.arrival_city && <span className="error_msg">{errors.arrival_city}</span>}
           </div>
 
-          <div className="form_group">
-            <label htmlFor="description">Описание</label>
-            <div className="text_editor_wrapper">
-              <div className="text_editor_content">
+          <label>Содержание</label>
+          <div className={`text_editor_wrapper`}>
+            <div className="text_editor_content">
+              {formData.editorData && (
                 <TextEditor
-                  data={descriptionData}
-                  onChange={setDescriptionData}
-                  editorBlock="create-tour-package-description"
+                  data={formData.initialData}
+                  editorBlock="editorjs-container"
+                  editorRef={editorRef}
+                  onChange={handleEditorChange}
                 />
-              </div>
+              )}
             </div>
           </div>
 
@@ -263,7 +363,10 @@ const AdminPanelCreateTourPackage = () => {
             <div className="uploaded_images_wrapper">
               {formData.galleryImages.map((img, idx) => (
                 <div className="uploaded_image" key={idx}>
-                  <img src={img.preview} alt={`Галерея ${idx}`} />
+                  <img
+                    src={img.file ? img.preview : `http://localhost:8000${img.preview}`}
+                    alt={`Галерея ${idx}`}
+                  />
                 </div>
               ))}
 
@@ -282,19 +385,21 @@ const AdminPanelCreateTourPackage = () => {
                 />
               </div>
             </div>
+            {imageErrors && <div className="error_msg">{imageErrors}</div>}
           </div>
 
           <div className="create_tour_variants_block">
             <p className="small_title_text">Варианты туров</p>
 
-            {tourVariants.map((variant, index) => (
+            {formData.tourVariants.map((variant, index) => (
               <div className="tour_creation_wrapper" key={index}>
                 <div className="tour_creation_description">
                   <HotelImageUploader
-                    image={hotelImages[index]}
+                    image={formData.hotelImages[index]}
                     index={index}
                     onChange={handleHotelImageChange}
                   />
+
                   <div className="tour_creation_inputs">
                     <div className="form_group">
                       <label htmlFor={`hotel_name_${index}`}>
@@ -302,152 +407,103 @@ const AdminPanelCreateTourPackage = () => {
                       </label>
                       <input
                         type="text"
-                        className={`admin_input ${
-                          errors[`hotel_name_${index}`] ? 'error_input' : ''
-                        }`}
+                        className="admin_input"
                         placeholder="Название отеля"
                         name="hotel_name"
                         value={variant.hotel_name}
                         onChange={(e) => handleTourVariantChange(index, e)}
                         required
                       />
-                      {errors[`hotel_name_${index}`] && (
-                        <span className="error_msg">{errors[`hotel_name_${index}`]}</span>
-                      )}
                     </div>
 
                     <div className="divided_three_inputs">
                       <div className="form_group">
-                        <label htmlFor={`departure_city_${index}`}>Город отправления</label>
+                        <label>Город отправления</label>
                         <input
                           type="text"
-                          className={`admin_input ${
-                            errors[`variant_departure_city_${index}`] ? 'error_input' : ''
-                          }`}
-                          placeholder="Город отправления"
+                          className="admin_input"
                           name="departure_city"
                           value={variant.departure_city}
                           onChange={(e) => handleTourVariantChange(index, e)}
                         />
-                        {errors[`variant_departure_city_${index}`] && (
-                          <span className="error_msg">
-                            {errors[`variant_departure_city_${index}`]}
-                          </span>
-                        )}
                       </div>
                       <div className="form_group">
-                        <label htmlFor={`arrival_city_${index}`}>Город прибытия</label>
+                        <label>Город прибытия</label>
                         <input
                           type="text"
-                          className={`admin_input ${
-                            errors[`variant_arrival_city_${index}`] ? 'error_input' : ''
-                          }`}
-                          placeholder="Город прибытия"
+                          className="admin_input"
                           name="arrival_city"
                           value={variant.arrival_city}
                           onChange={(e) => handleTourVariantChange(index, e)}
                         />
-                        {errors[`variant_arrival_city_${index}`] && (
-                          <span className="error_msg">
-                            {errors[`variant_arrival_city_${index}`]}
-                          </span>
-                        )}
                       </div>
                       <div className="form_group">
-                        <label htmlFor={`arrival_country_${index}`}>Страна прибытия</label>
+                        <label>Страна прибытия</label>
                         <input
                           type="text"
-                          className={`admin_input ${
-                            errors[`variant_arrival_country_${index}`] ? 'error_input' : ''
-                          }`}
-                          placeholder="Страна прибытия"
+                          className="admin_input"
                           name="arrival_country"
                           value={variant.arrival_country}
                           onChange={(e) => handleTourVariantChange(index, e)}
                         />
-                        {errors[`variant_arrival_city_${index}`] && (
-                          <span className="error_msg">
-                            {errors[`variant_arrival_country_${index}`]}
-                          </span>
-                        )}
                       </div>
                     </div>
 
                     <div className="about_tour">
                       <div className="form_group">
-                        <label htmlFor={`tour_start_${index}`}>
+                        <label>
                           Начало тура <span className="star">*</span>
                         </label>
                         <input
                           type="date"
-                          className={`admin_input ${
-                            errors[`tour_start_${index}`] ? 'error_input' : ''
-                          }`}
+                          className="admin_input"
                           name="tour_start"
                           value={variant.tour_start}
                           onChange={(e) => handleTourVariantChange(index, e)}
                           required
                         />
-                        {errors[`tour_start_${index}`] && (
-                          <span className="error_msg">{errors[`tour_start_${index}`]}</span>
-                        )}
                       </div>
                       <div className="form_group">
-                        <label htmlFor={`tour_finish_${index}`}>
+                        <label>
                           Посл. день тура <span className="star">*</span>
                         </label>
                         <input
                           type="date"
-                          className={`admin_input ${
-                            errors[`tour_finish_${index}`] ? 'error_input' : ''
-                          }`}
+                          className="admin_input"
                           name="tour_finish"
                           value={variant.tour_finish}
                           onChange={(e) => handleTourVariantChange(index, e)}
                           required
                         />
-                        {errors[`tour_finish_${index}`] && (
-                          <span className="error_msg">{errors[`tour_finish_${index}`]}</span>
-                        )}
                       </div>
                       <div className="form_group">
-                        <label htmlFor={`tour_nights_${index}`}>
+                        <label>
                           Количество ночей <span className="star">*</span>
                         </label>
                         <input
                           type="number"
-                          className={`admin_input ${
-                            errors[`tour_nights_${index}`] ? 'error_input' : ''
-                          }`}
+                          className="admin_input"
                           name="tour_nights"
                           value={variant.tour_nights}
                           onChange={(e) => handleTourVariantChange(index, e)}
                           required
                         />
-                        {errors[`tour_nights_${index}`] && (
-                          <span className="error_msg">{errors[`tour_nights_${index}`]}</span>
-                        )}
                       </div>
                     </div>
 
                     <div className="divided_two_inputs">
                       <div className="form_group">
-                        <label htmlFor={`tour_price_${index}`}>
+                        <label>
                           Цена <span className="star">*</span>
                         </label>
                         <input
                           type="number"
-                          className={`admin_input ${
-                            errors[`tour_price_${index}`] ? 'error_input' : ''
-                          }`}
+                          className="admin_input"
                           name="tour_price"
                           value={variant.tour_price}
                           onChange={(e) => handleTourVariantChange(index, e)}
                           required
                         />
-                        {errors[`tour_price_${index}`] && (
-                          <span className="error_msg">{errors[`tour_price_${index}`]}</span>
-                        )}
                       </div>
 
                       <div className="radio_btns_wrapper">
@@ -475,6 +531,7 @@ const AdminPanelCreateTourPackage = () => {
                         </div>
                       </div>
                     </div>
+
                     <div className="divided_three_inputs">
                       <div className="form_group">
                         <label htmlFor={`image_text_copyright_${index}`}>Автор фото</label>
@@ -552,42 +609,40 @@ const AdminPanelCreateTourPackage = () => {
                   <button
                     type="button"
                     className="copy_tour"
-                    onClick={() => dispatch(copyTourVariant(index))}
+                    onClick={() => copyTourVariant(index)}
                   >
                     Скопировать вариант
                   </button>
                   <button
                     type="button"
                     className="delete_tour"
-                    onClick={() => dispatch(removeTourVariant(index))}
+                    onClick={() => removeTourVariant(index)}
                   >
                     Удалить вариант
                   </button>
                 </div>
               </div>
             ))}
+          </div>
 
-            <div className="create_tour_variant_btn">
-              <div className="input_file_wrapper" onClick={() => dispatch(addTourVariant())}>
-                + Нажмите, чтобы добавить вариант тура
-              </div>
+          <div className="create_tour_variant_btn">
+            <div className="input_file_wrapper" onClick={() => addTourVariant()}>
+              + Нажмите, чтобы добавить вариант тура
             </div>
           </div>
 
-          <button type="submit" className="blue_btn" disabled={loading}>
+          <button className="blue_btn" onClick={handleSubmit} disabled={loading}>
             {loading ? 'Сохранение...' : 'Сохранить'}
           </button>
           <button onClick={() => navigate(-1)} className='cancel_btn'>
             Отмена
           </button>
-
           <div className="message_info_block">
             {imageErrors && <div className="error_msg">{imageErrors}</div>}
             {submitError && <div className="error_msg">{submitError}</div>}
             {error && <div className="error_msg">{error}</div>}
-
             {success && (
-             <div className="success_msg">
+              <div className="success_msg">
                 <p>Туристическая подборка успешно обновлена.  
                     <button onClick={() => navigate(-1)} className='cancel_btn'>
                     Перейти в админ-панель
@@ -602,4 +657,4 @@ const AdminPanelCreateTourPackage = () => {
   );
 };
 
-export default AdminPanelCreateTourPackage;
+export default AdminPanelEditTourPackage;

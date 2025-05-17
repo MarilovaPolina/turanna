@@ -43,6 +43,6 @@ class TourPackageImageController extends Controller
 
         $image->delete();
 
-        return response()->json(['message' => 'Image deleted']);
+        return response()->json(['message' => 'Изображение удалено']);
     }
 }

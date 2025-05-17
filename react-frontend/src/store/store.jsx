@@ -1,20 +1,22 @@
-import { configureStore } from "@reduxjs/toolkit"
-import authReducer from "./authSlice"
-import usersReducer from "./usersSlice"
-import infoSheetSlice from "./infoSheetSlice"
-import tableSortSlice from "./tableSortSlice"
-import articlesSlice from "./articlesSlice"
-import certificatesSlice from "./certificatesSlice"
-import applicationsSlice from "./applicationsSlice"
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "./authSlice";
+import usersReducer from "./usersSlice";
+import infoSheetReducer from "./infoSheetSlice";
+import tableSortReducer from "./tableSortSlice";
+import articlesReducer from "./articlesSlice";
+import certificatesReducer from "./certificatesSlice";
+import applicationsReducer from "./applicationsSlice";
+import tourPackagesReducer from "./tourPackagesSlice";
 
-export const store = configureStore ({
-  reducer:{
+export const store = configureStore({
+  reducer: {
     auth: authReducer,
     users: usersReducer,
-    infoSheet: infoSheetSlice,
-    tableSort: tableSortSlice,
-    article: articlesSlice,
-    certificates: certificatesSlice,
-    applications: applicationsSlice,
+    infoSheet: infoSheetReducer,
+    tableSort: tableSortReducer, 
+    article: articlesReducer,
+    certificates: certificatesReducer, 
+    applications: applicationsReducer,
+    tourPackage: tourPackagesReducer,
   }
 });

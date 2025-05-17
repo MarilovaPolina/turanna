@@ -16,7 +16,7 @@ class TourDetailController extends Controller
         $validated = $request->validate([
             'room_class' => 'nullable|string|max:35',
             'age_limit' => 'nullable|string|max:35',
-            'all_inclusive' => 'nullable|in:yes,no',
+            'all_inclusive' => 'nullable|in:ultra_all_in,all_in,full_package,half_board,breakfast,flgt_accmd,accmd,flgt_excursion,excursion,сustom',
             'airline' => 'nullable|string|max:35',
             'distance_airport' => 'nullable|string|max:35',
             'distance_lift' => 'nullable|string|max:35',
@@ -64,11 +64,10 @@ class TourDetailController extends Controller
             return response()->json(['message' => 'Tour detail not found.'], 404);
         }
 
-        // Валидация входных данных
         $validated = $request->validate([
             'room_class' => 'nullable|string|max:35',
             'age_limit' => 'nullable|string|max:35',
-            'all_inclusive' => 'nullable|in:yes,no',
+            'all_inclusive' => 'nullable|in:ultra_all_in,all_in,full_package,half_board,breakfast,flgt_accmd,accmd,flgt_excursion,excursion,сustom',
             'airline' => 'nullable|string|max:35',
             'distance_airport' => 'nullable|string|max:35',
             'distance_lift' => 'nullable|string|max:35',
@@ -103,11 +102,11 @@ class TourDetailController extends Controller
         $tourDetail = $tour->detail;
 
         if (!$tourDetail) {
-            return response()->json(['message' => 'Tour detail not found.'], 404);
+            return response()->json(['message' => 'Детали тура не найдены.'], 404);
         }
 
         $tourDetail->delete();
 
-        return response()->json(['message' => 'Tour detail deleted successfully.']);
+        return response()->json(['message' => 'Детали тура успешно удалены.']);
     }
 }

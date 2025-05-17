@@ -35,15 +35,31 @@ export const sortData = (data, sortBy, sortOrder) => {
 
   return [...data].sort((a, b) => {
     if (sortBy === 'id') {
-        return direction * (a.id - b.id);
+      return direction * (a.id - b.id);
     } else if (sortBy === 'title') {
-        return direction * a.title.localeCompare(b.title);
+      return direction * a.title.localeCompare(b.title);
     } else if (sortBy === 'date') {
-        return direction * (new Date(a.created_at) - new Date(b.created_at));
+      return direction * (new Date(a.date) - new Date(b.date));
     }else if (sortBy === 'email') {
-        return direction * a.email.localeCompare(b.email);
+      return direction * a.email.localeCompare(b.email);
     }else if (sortBy === 'name') {
-        return direction * a.name.localeCompare(b.name);
+      return direction * a.name.localeCompare(b.name);
+    }else if (sortBy === 'start_date') {
+      return direction * (new Date(a.start_date) - new Date(b.start_date));
+    }else if (sortBy === 'end_date') {
+      return direction * (new Date(a.end_date) - new Date(b.end_date));
+    }else if (sortBy === 'article_number') {
+      return direction * a.article_number.localeCompare(b.article_number);
+    }else if (sortBy === 'hotel_name') {
+      return direction * a.hotel_name.localeCompare(b.hotel_name);
+    }else if (sortBy === 'arrival_country') {
+      return direction * a.arrival_country.localeCompare(b.arrival_country);
+    }else if (sortBy === 'departure_city') {
+      return direction * a.departure_city.localeCompare(b.departure_city);
+    }else if (sortBy === 'arrival_city') {
+      return direction * a.arrival_city.localeCompare(b.arrival_city);
+    }else if (sortBy === 'price') {
+      return direction * (Number(a.price) - Number(b.price));
     }
 
     return 0;

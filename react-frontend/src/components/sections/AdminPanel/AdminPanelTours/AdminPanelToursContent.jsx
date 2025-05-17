@@ -1,123 +1,107 @@
-import React from 'react';
-import sortIcon from "../../../../assets/img/icons/sort.png";
+import React from 'react'; 
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, Link } from 'react-router-dom';
 
+import ActionsPopup from '../../../common/ActionsPopup/ActionsPopup';
+import { getAllTours, deleteTour } from '../../../../store/tourPackagesSlice';
+import sortIcon from "../../../../assets/img/icons/sort.png";
+import { setSortBy, setSortOrder, sortData, toggleSortOrder } from '../../../../store/tableSortSlice';
 
 const AdminPanelToursContentContent = () => {
-    return (
-        
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { loading, error } = useSelector((state) => state.tourPackage);
+    const toursList = useSelector((state) => state.tourPackage.toursList);
+    const [currentOpenId, setCurrentOpenId] = React.useState(null);
+    const { sortBy, sortOrder } = useSelector((state) => state.tableSort);
+
+    React.useEffect(() => {
+        dispatch(getAllTours());
+    }, [dispatch]);
+
+    const handleDelete = (tourId) => {
+        if (window.confirm('Вы уверены, что хотите удалить этот тур?')) {
+            dispatch(deleteTour(tourId))
+                .then(() => alert('Тур удален успешно'))
+                .catch((error) => alert('Ошибка при удалении тура: ' + error.message));
+        }
+    };
+
+    const handleSort = (column) => {
+        if (sortBy === column) {
+            dispatch(toggleSortOrder()); 
+        } else {
+            dispatch(setSortBy(column)); 
+            dispatch(setSortOrder('asc'));
+        }
+    };
+
+    const sortedTours = sortData(toursList, sortBy, sortOrder); 
+
+    return (       
         <>
             <div className="admin_panel_content">
                 <div className="content_heading">
-                    <p className="small_title_text">
-                        Туры
-                    </p>
-                    <a href="#" className="blue_btn">
-                        Добавить пост
-                    </a>
+                    <p className="small_title_text">Туры</p>
+                    <Link to="create_tour_package" className="blue_btn">Добавить подборку</Link>
                 </div>
                 
                 <div className="table_container">
                     <table className="data_table">
                         <thead>
                             <tr className="table_row">
-                                <th className="table_cell">
-                                    ID
-                                    <img className="col_sort" src={sortIcon} alt="Sort" />
-                                </th>
-                                <th className="table_cell">
-                                    Артикул
-                                    <img className="col_sort" src={sortIcon} alt="Sort" />
-                                </th>
-                                <th className="table_cell">
-                                    Место
-                                    <img className="col_sort" src={sortIcon} alt="Sort" />
-                                </th>
-                                <th className="table_cell">
-                                    Маршрут
-                                    <img className="col_sort" src={sortIcon} alt="Sort" />
-                                </th>
-                                <th className="table_cell">
-                                    Цена
-                                    <img className="col_sort" src={sortIcon} alt="Sort" />
-                                </th>
-                                <th className="table_cell">
-                                    Начало
-                                    <img className="col_sort" src={sortIcon} alt="Sort" />
-                                </th>
-                                <th className="table_cell">
-                                    Посл. день
-                                    <img className="col_sort" src={sortIcon} alt="Sort" />
-                                </th>
-                                <th className="table_cell">
-                                    Ночей
-                                    <img className="col_sort" src={sortIcon} alt="Sort" />
-                                </th>
-                                <th className="table_cell">
-                                    Отель
-                                    <img className="col_sort" src={sortIcon} alt="Sort" />
-                                </th>
-                                <th className="table_cell">
-                                    Статус
-                                    <img className="col_sort" src={sortIcon} alt="Sort" />
-                                </th>
-                                <th className="table_cell">Изображение</th>
+                                <th className="table_cell">ID <img onClick={() => handleSort('id')} className="col_sort" src={sortIcon} alt="Sort" /></th>
+                                <th className="table_cell">Артикул <img onClick={() => handleSort('article_number')} className="col_sort" src={sortIcon} alt="Sort" /></th>
+                                <th className="table_cell">Отель <img onClick={() => handleSort('hotel_name')} className="col_sort" src={sortIcon} alt="Sort" /></th>
+                                <th className="table_cell">Страна <img onClick={() => handleSort('arrival_country')} className="col_sort" src={sortIcon} alt="Sort" /></th>
+                                <th className="table_cell">Отправление<img onClick={() => handleSort('departure_city')} className="col_sort" src={sortIcon} alt="Sort" /></th>
+                                <th className="table_cell">Прибытие <img onClick={() => handleSort('arrival_city')} className="col_sort" src={sortIcon} alt="Sort" /></th>
+                                <th className="table_cell">Начало <img onClick={() => handleSort('start_date')} className="col_sort" src={sortIcon} alt="Sort" /></th>
+                                <th className="table_cell">Окончание <img onClick={() => handleSort('end_date')} className="col_sort" src={sortIcon} alt="Sort" /></th>
+                                <th className="table_cell">Цена <img onClick={() => handleSort('price')} className="col_sort" src={sortIcon} alt="Sort" /></th>
                                 <th className="table_cell"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="table_row">
-                                <td className="table_cell">128</td>
-                                <td className="table_cell">БАЙ128-10023</td>
-                                <td className="table_cell">БАЙКАЛ</td>
-                                <td className="table_cell">Казань - Байкал</td>
-                                <td className="table_cell">от<br /> 29 143 ₽</td>
-                                <td className="table_cell">10 фев</td>
-                                <td className="table_cell">10 фев</td>
-                                <td className="table_cell">3 ночей</td>
-                                <td className="table_cell">–</td>
-                                <td className="table_cell">Актуально</td>
-                                <td className="table_cell">
-                                    <img src="https://svoe-zagorodom.ru/blog/wp-content/uploads/2024/06/bajkalchik.jpg" alt="img" className="table_image" />
-                                </td>
-                                <td className="table_cell table_actions">...</td>
-                            </tr>
-                            <tr className="table_row finished">
-                                <td className="table_cell">129</td>
-                                <td className="table_cell">БАЙ128-10023-EBR</td>
-                                <td className="table_cell">ЕГИПЕТ</td>
-                                <td className="table_cell">Казань - Шарм-эль-Шейх</td>
-                                <td className="table_cell">от<br /> 258 200 ₽/чел</td>
-                                <td className="table_cell">30 окт</td>
-                                <td className="table_cell">30 дек</td>
-                                <td className="table_cell">7 ночей</td>
-                                <td className="table_cell">Egypt Beach Resort 4*</td>
-                                <td className="table_cell">Закончился</td>
-                                <td className="table_cell">
-                                    <img src="https://library.vladimir.ru/wp-content/uploads/2017/03/%D0%B1%D0%B0%D0%B9.jpg" alt="img" className="table_image" />
-                                </td>
-                                <td className="table_cell table_actions">...</td>
-                            </tr>
-                            <tr className="table_row">
-                                <td className="table_cell">130</td>
-                                <td className="table_cell">БАЙ128-10023-EBR</td>
-                                <td className="table_cell">ОАЭ</td>
-                                <td className="table_cell">Казань - Шарджа</td>
-                                <td className="table_cell">от<br /> 152 200 ₽/чел</td>
-                                <td className="table_cell">17 янв</td>
-                                <td className="table_cell">17 янв</td>
-                                <td className="table_cell">7 ночей</td>
-                                <td className="table_cell">Egypt Beach Resort 4*</td>
-                                <td className="table_cell">Актуально</td>
-                                <td className="table_cell">
-                                    <img src="https://fanatbaikala.ru/img/tours/62.jpg" alt="img" className="table_image" />
-                                </td>
-                                <td className="table_cell table_actions">...</td>
-                            </tr>
-                        </tbody>
+                            {loading ? (
+                                <tr>
+                                <td colSpan="10">Загрузка...</td>
+                                </tr>
+                            ) : error ? (
+                                <tr>
+                                <td colSpan="10">Ошибка при загрузке туров</td>
+                                </tr>
+                            ) : (
+                                sortedTours.map((tour) => (
+                                <tr
+                                    key={tour.id}
+                                    className={`table_row ${tour.status === 'expired' ? 'finished' : ''}`}
+                                >
+                                    <td className="table_cell">{tour.id}</td>
+                                    <td className="table_cell">{tour.article_number || '–'}</td>
+                                    <td className="table_cell">{tour.hotel_name || '–'}</td>
+                                    <td className="table_cell">{tour.arrival_country || '–'}</td>
+                                    <td className="table_cell">{tour.departure_city || '–'}</td>
+                                    <td className="table_cell">{tour.arrival_city || '–'}</td>
+                                    <td className="table_cell">{tour.start_date ? new Date(tour.start_date).toLocaleDateString('ru-RU') : '–'}</td>
+                                    <td className="table_cell">{tour.end_date ? new Date(tour.end_date).toLocaleDateString('ru-RU') : '–'}</td>
+                                    <td className="table_cell">{tour.price ? `от ${Number(tour.price).toLocaleString('ru-RU')} ₽` : '–'}</td>
+                                    <td className="table_cell">
+                                    <ActionsPopup
+                                        id={tour.id}
+                                        currentOpenId={currentOpenId}
+                                        setCurrentOpenId={setCurrentOpenId}
+                                        onDelete={handleDelete}
+                                        onEdit={() => navigate(`edit_tour_package/${tour.tour_package_id}`)}
+                                    />
+                                    </td>
+                                </tr>
+                                ))
+                            )}
+                            </tbody>
                     </table>
-                    
                     <div className="table_footer">
-                        Всего 3 результата
+                        Всего {toursList.length} результатов
                     </div>
                 </div>
             </div>

@@ -15,6 +15,7 @@ class Tour extends Model
         'hotel_image',
         'departure_city',
         'arrival_city',
+        'arrival_country',
         'start_date',
         'nights',
         'price',

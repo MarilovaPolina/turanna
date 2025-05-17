@@ -29,17 +29,15 @@ class ArticleController extends Controller
         ];
 
         if ($request->hasFile('main_image')) {
-            // Сохранение основного изображения
             $path = $request->file('main_image')->store('public/articles/images');
             $articleData['main_image'] = Storage::url($path);
 
-            // Создание миниатюры изображения
+            // миниатюра
             $image = Image::make($request->file('main_image'));
             $thumbnailPath = 'public/articles/thumbnails/' . $request->file('main_image')->hashName();
             $image->resize(64, 40);
             $image->save(storage_path('app/' . $thumbnailPath));
 
-            // Путь к миниатюре
             $articleData['thumbnail_image'] = Storage::url($thumbnailPath);
         }
 

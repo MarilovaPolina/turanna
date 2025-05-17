@@ -36,13 +36,12 @@ const AdminPanelCreateCertificate = () => {
             if (error.includes('The image must be a file of type: jpeg, png, jpg, svg.')) {
                 setInputsError('Недопустимый формат изображения. Разрешены только: JPEG, PNG, JPG, SVG. Возможно, файл потенциально небозопасен или поврежден. Попробуйте пересохранить изображение (напр. с помощью редактора фото)');
             } else {
-                setInputsError(error); 
+                setInputsError(error || "Ошибка при сохранении. Попробуйте изменить данные и сохранить еще раз."); 
             }
         });
     } catch (err) {
         console.error('Ошибка при создании сертификата', err);
     }
-    console.log(success)
 };
 
 React.useEffect(() => {

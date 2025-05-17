@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('hotel_image')->nullable();
             $table->string('departure_city', 25)->nullable();
             $table->string('arrival_city', 25)->nullable();
+            $table->string('arrival_country', 50)->nullable();
             $table->date('start_date');
             $table->unsignedInteger('nights');
             $table->decimal('price', 10, 2);

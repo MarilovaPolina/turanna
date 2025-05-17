@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\Validator;
 
 class TourController extends Controller
 {
+    public function index()
+    {
+        \App\Models\Tour::where('status', 'active')
+            ->where('end_date', '<', now())
+            ->update(['status' => 'expired']);
+        
+        $tours = \App\Models\Tour::with('details')->latest()->get();
+        return response()->json($tours);
+    }
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -17,6 +26,7 @@ class TourController extends Controller
             'hotel_image' => 'nullable|string',
             'departure_city' => 'required|string|max:25',
             'arrival_city' => 'required|string|max:25',
+            'arrival_country' => 'nullable|string|max:50',
             'start_date' => 'required|date',
             'nights' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
@@ -40,6 +50,7 @@ class TourController extends Controller
             'hotel_image',
             'departure_city',
             'arrival_city',
+            'arrival_country',
             'start_date',
             'nights',
             'price',
@@ -70,6 +81,7 @@ class TourController extends Controller
             'hotel_image' => 'nullable|string',
             'departure_city' => 'sometimes|required|string|max:25',
             'arrival_city' => 'sometimes|required|string|max:25',
+            'arrival_country' => 'nullable|string|max:50',
             'start_date' => 'sometimes|required|date',
             'nights' => 'sometimes|required|integer|min:1',
             'price' => 'sometimes|required|numeric|min:0',
@@ -92,6 +104,7 @@ class TourController extends Controller
             'hotel_image',
             'departure_city',
             'arrival_city',
+            'arrival_country',
             'start_date',
             'nights',
             'price',

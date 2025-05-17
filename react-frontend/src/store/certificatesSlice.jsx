@@ -61,6 +61,7 @@ export const deleteCertificate = createAsyncThunk(
         }
     }
 )
+
 export const updateCertificate = createAsyncThunk(
     'certificates/updateCertificate',
     async ({ certificateId, formData }, { rejectWithValue, getState }) => {

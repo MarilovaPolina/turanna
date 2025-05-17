@@ -36,8 +36,8 @@ const AdminPanelCertificates = () => {
       dispatch(setSortOrder('asc'));
     }
   };
-
   const sortedCertificates = sortData(certificates, sortBy, sortOrder); 
+  
   return (
     <div className="admin_panel_content">
       <div className="content_heading">
