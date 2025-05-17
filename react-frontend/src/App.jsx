@@ -30,6 +30,9 @@ import AdminPanelApplications from './components/sections/AdminPanel/AdminPanelA
 import AdminPanelEditApplication from './components/sections/AdminPanel/AdminPanelApplications/AdminPanelEditApplication';
 import AdminPanelCreateTourPackage from './components/sections/AdminPanel/AdminPanelTours/AdminPanelCreateTourPackage';
 import AdminPanelEditTourPackage from './components/sections/AdminPanel/AdminPanelTours/AdminPanelEditTourPackage';
+import AdminPanelCreatePartner from './components/sections/AdminPanel/AdminPanelPartners/AdminPanelCreatePartner';
+import AdminPanelPartners from './components/sections/AdminPanel/AdminPanelPartners/AdminPanelPartners';
+import AdminPanelEditPartner from './components/sections/AdminPanel/AdminPanelPartners/AdminPanelEditPartner';
 
 function App() {
     return (
@@ -83,6 +86,11 @@ function App() {
                     <Route path="applications">
                         <Route index element={<AdminPanelApplications />} />
                         <Route path="edit_application/:id" element={<AdminPanelEditApplication />} />
+                    </Route>
+                    <Route path="partners">
+                        <Route index element={<AdminPanelPartners />} />
+                        <Route path="create_partner" element={<AdminPanelCreatePartner />} />
+                        <Route path="edit_partner/:id" element={<AdminPanelEditPartner />} />
                     </Route>
                 </Route>
             </Routes>

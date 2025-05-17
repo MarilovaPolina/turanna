@@ -7,6 +7,7 @@ import articlesReducer from "./articlesSlice";
 import certificatesReducer from "./certificatesSlice";
 import applicationsReducer from "./applicationsSlice";
 import tourPackagesReducer from "./tourPackagesSlice";
+import partnersReducer from "./partnersSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,5 +19,6 @@ export const store = configureStore({
     certificates: certificatesReducer, 
     applications: applicationsReducer,
     tourPackage: tourPackagesReducer,
+    partners: partnersReducer,
   }
 });

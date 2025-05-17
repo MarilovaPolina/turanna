@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
 use App\Models\TourPackage;
@@ -98,6 +99,7 @@ class TourPackageController extends Controller
                 unset($tourData['details']);
 
                 $tour = Tour::create($tourData);
+                $this->assignArticleNumberToTour($tour);
 
                 if ($details) {
                     $details['tour_id'] = $tour->id;
@@ -163,7 +165,7 @@ class TourPackageController extends Controller
 
             $tours = json_decode($toursRaw, true);
             if (!is_array($tours)) {
-                return response()->json(['error' => 'Некорректный формат данных "tours"'], 422);
+                return response()->json(['error' => 'Некорректный формат данных'], 422);
             }
 
             if (is_array($tours)) {
@@ -201,6 +203,8 @@ class TourPackageController extends Controller
                         $tourData['tour_package_id'] = $tourPackage->id;
                         $tour = Tour::create($tourData);
 
+                        $this->assignArticleNumberToTour($tour);
+
                         if ($details) {
                             $details['tour_id'] = $tour->id;
                             TourDetail::create($details);
@@ -237,5 +241,54 @@ class TourPackageController extends Controller
         $tourPackage = TourPackage::findOrFail($id);
         $tourPackage->delete();
         return response()->json(['message' => 'Туристическая подборка удалена.']);
+    }
+
+    private function generateArticleNumber(Tour $tour): string
+    {
+        $hotelAbbr = $this->getHotelAbbreviation($tour->hotel_name);
+        $startDate = Carbon::parse($tour->start_date)->format('dm');
+
+        return 'TP' . $tour->tour_package_id .
+            'T' . $tour->id .
+            '-' . $hotelAbbr .
+            '-' . $startDate;
+    }
+
+    private function getHotelAbbreviation(string $hotelName): string
+    {
+        $cleanName = preg_replace('/[^a-zA-Zа-яА-Я0-9\s]/u', '', $hotelName);
+        $words = preg_split('/\s+/', $cleanName);
+
+        $abbr = '';
+        $numbers = '';
+
+        foreach ($words as $word) {
+            if ($word === '') continue;
+
+            if (ctype_digit($word)) {
+                $numbers .= $word;
+            }
+            elseif (preg_match('/^[a-zA-Zа-яА-Я]/u', $word)) {
+                $abbr .= mb_strtoupper(mb_substr($word, 0, 1));
+
+                preg_match_all('/\d+/', $word, $matches);
+                if (!empty($matches[0])) {
+                    $numbers .= implode('', $matches[0]);
+                }
+            }
+        }
+
+        return $abbr . $numbers;
+    }
+
+    private function assignArticleNumberToTour(Tour $tour)
+    {
+        if (!$tour->id || !$tour->tour_package_id) {
+            throw new \Exception('Невозможно сгенерировать артикул, отсутствует ID тура или подборки.');
+        }
+
+        $article = $this->generateArticleNumber($tour);
+        $tour->article_number = $article;
+        $tour->save();
     }
 }

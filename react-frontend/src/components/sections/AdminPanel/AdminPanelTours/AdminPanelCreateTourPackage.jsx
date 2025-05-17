@@ -11,6 +11,7 @@ import {
   copyTourVariant,
   updateTourVariantField,
   resetSuccess,
+  resetTourVariants
 } from '../../../../store/tourPackagesSlice';
 import TourVariantDetails from './TourVariantDetails';
 import HotelImageUploader from './HotelImageUploader';
@@ -171,6 +172,7 @@ const AdminPanelCreateTourPackage = () => {
 
     try {
       const result = await dispatch(createTourPackage(fullData)).unwrap();
+      dispatch(resetTourVariants());
     } catch (error) {
       if (typeof error === 'string' && error.includes('The main image must be a file of type')) {
         setSubmitError(

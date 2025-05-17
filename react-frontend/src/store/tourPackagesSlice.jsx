@@ -311,6 +311,9 @@ const tourPackagesSlice = createSlice({
     resetSuccess(state) {
       state.success = false;
     },
+     resetTourVariants(state) {
+      state.tourVariants = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -384,5 +387,6 @@ export const {
   copyTourVariant,
   updateTourVariantField,
   resetSuccess,
+  resetTourVariants
 } = tourPackagesSlice.actions;
 export default tourPackagesSlice.reducer;

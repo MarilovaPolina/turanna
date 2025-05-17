@@ -56,7 +56,6 @@ class CertificateController extends Controller
         $certificate->title = $request->title;
 
         if ($request->hasFile('image')) {
-            // Удаление старых изображений
             if ($certificate->image) {
                 Storage::delete(str_replace('/storage/', 'public/', $certificate->image));
             }
@@ -64,11 +63,9 @@ class CertificateController extends Controller
                 Storage::delete(str_replace('/storage/', 'public/', $certificate->thumbnail_image));
             }
 
-            // Сохранение нового изображения
             $path = $request->file('image')->store('public/certificates/images');
             $certificate->image = Storage::url($path);
 
-            // Создание миниатюры
             $image = Image::make($request->file('image'));
             $thumbnailPath = 'public/certificates/thumbnails/' . $request->file('image')->hashName();
             $image->resize(50, 35, function ($constraint) {

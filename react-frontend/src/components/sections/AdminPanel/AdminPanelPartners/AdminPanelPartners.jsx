@@ -83,12 +83,12 @@ const AdminPanelPartners = () => {
                 sortedPartners.map((partner) => (
                 <tr key={partner.id}>
                   <td>{partner.id}</td>
-                  <td className='title_td'>{partner.title}</td>
+                  <td className='title_td'>{partner.name}</td>
                   <td className='title_td'><a href={partner.link}>{partner.link}</a></td>
                   <td>
-                    {partner.thumbnail_image ? (
+                    {partner.thumbnail_logo ? (
                       <img
-                        src={`http://localhost:8000${partner.thumbnail_image}`}
+                        src={`http://localhost:8000${partner.thumbnail_logo}`}
                         className="table_image"
                       />
                     ) : (

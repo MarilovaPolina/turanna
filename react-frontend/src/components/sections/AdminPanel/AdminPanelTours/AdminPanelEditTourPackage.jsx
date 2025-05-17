@@ -20,9 +20,10 @@ const AdminPanelEditTourPackage = () => {
   const dispatch = useDispatch();
   const editorRef = React.useRef(null);
   const [errors, setErrors] = React.useState({});
-  const { loading, error, selectedPackage, success } = useSelector((state) => state.tourPackage);
+  const { loading, error, success } = useSelector((state) => state.tourPackage);
   const [imageErrors, setImageErrors] = React.useState('');
   const [submitError, setSubmitError] = React.useState('');
+  const [loadingData, setLoadingData] = React.useState(true);
 
   const [formData, setFormData] = React.useState({
     package_name: '',
@@ -68,6 +69,7 @@ const AdminPanelEditTourPackage = () => {
         })),
         hotelImages,
       });
+      setLoadingData(false);
     });
   }, [dispatch, id]);
 
@@ -178,15 +180,17 @@ const AdminPanelEditTourPackage = () => {
     }));
   };
 
-  const copyTourVariant = (index) => {
-    const toCopy = { ...formData.tourVariants[index] };
-    delete toCopy.id;
+const copyTourVariant = (index) => {
+  const toCopy = { ...formData.tourVariants[index] };
+  delete toCopy.id;
+  toCopy.hotel_name = toCopy.hotel_name + ' copy';
+  toCopy.article_number = '';
 
-    setFormData((prev) => ({
-      ...prev,
-      tourVariants: [...prev.tourVariants, toCopy],
-    }));
-  };
+  setFormData((prev) => ({
+    ...prev,
+    tourVariants: [...prev.tourVariants, toCopy],
+  }));
+};
 
   const handleTourVariantChange = (index, e) => {
     const { name, value } = e.target;
@@ -281,6 +285,8 @@ const AdminPanelEditTourPackage = () => {
       }
     });
   };
+
+  if (loadingData) return "Загрузка...";
 
   return (
     <div className="admin_panel_content">

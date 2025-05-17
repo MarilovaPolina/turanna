@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\InfoSheetController;
+use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\TourController;
 use App\Http\Controllers\TourDetailController;
@@ -82,3 +83,9 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::get('/posts-content', [PostsController::class, 'index']);
+
+Route::middleware('auth:sanctum')->get('/partners', [PartnerController::class, 'index']);
+Route::middleware('auth:sanctum')->post('/partners', [PartnerController::class, 'store']);
+Route::middleware('auth:sanctum')->put('/partners/{id}', [PartnerController::class, 'update']);
+Route::middleware('auth:sanctum')->delete('/partners/{id}', [PartnerController::class, 'destroy']);
+Route::middleware('auth:sanctum')->get('/partners/{id}', [PartnerController::class, 'show']);
