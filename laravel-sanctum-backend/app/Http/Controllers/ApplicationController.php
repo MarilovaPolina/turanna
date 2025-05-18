@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Application;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ApplicationController extends Controller
 {
@@ -62,19 +63,5 @@ class ApplicationController extends Controller
         $application->save();
 
         return response()->json($application);
-    }
-
-    public function uploadDocument(Request $request, $id)
-    {
-        $request->validate([
-            'document' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
-        ]);
-
-        $path = $request->file('document')->store('application_documents');
-
-        return response()->json([
-            'message' => 'Документ загружен',
-            'path' => $path,
-        ]);
     }
 }

@@ -18,9 +18,9 @@ function Auth() {
         e.preventDefault();
         try{
             await dispatch(loginUser(formData));
-            navigate('/dashboard/tours');
+            navigate('/dashboard/applications');
         }catch(error){
-            console.error('Authorization error:', error);
+            console.error('Пользователь не найден', error);
         }
     };
 

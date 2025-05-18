@@ -3,14 +3,9 @@ import axios from 'axios';
 
 export const getCertificates = createAsyncThunk(
   'certificates/getCertificates',
-  async (_, { rejectWithValue, getState }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const { auth } = getState();
-      const response = await axios.get('http://localhost:8000/api/certificates', {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
-      });
+      const response = await axios.get('http://localhost:8000/api/certificates');
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Ошибка при загрузке сертификатов');

@@ -32,6 +32,27 @@ export const getUser = createAsyncThunk(
   }
 );
 
+export const logoutUser = createAsyncThunk(
+  'auth/logoutUser',
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const { auth } = getState();
+      await axios.post(
+        "http://localhost:8000/api/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          }
+        }
+      );
+      return true;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Ошибка при выходе");
+    }
+  }
+);
+
 const initialState = {
   loading: null,
   token: localStorage.getItem("token") || null,
@@ -65,9 +86,16 @@ const authSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     })
+    
     .addCase(getUser.fulfilled, (state, action) => {
       state.user = action.payload;
-    });
+    })
+
+    .addCase(logoutUser.fulfilled, (state) => {
+        state.token = null;
+        state.user = null;
+        localStorage.removeItem("token");
+      });
   }
 });
 

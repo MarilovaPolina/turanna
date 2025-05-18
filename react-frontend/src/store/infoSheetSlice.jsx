@@ -69,15 +69,9 @@ export const updateInfoSheet = createAsyncThunk(
 
 export const getInfoSheets = createAsyncThunk(
   'infoSheet/getInfoSheets',
-  async(_, { rejectWithValue, getState }) => {
+  async(_, { rejectWithValue }) => {
     try{
-      const { auth } = getState();
-      const { data } = await axios.get('http://localhost:8000/api/info-sheets', {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
-          
-      });
+      const { data } = await axios.get('http://localhost:8000/api/info-sheets');
 
       return data;
     }

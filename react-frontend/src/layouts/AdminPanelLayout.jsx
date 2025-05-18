@@ -7,20 +7,24 @@ import ApplicationPopup from '../components/common/Popup/ApplicationPopup';
 import AdminPanelHeader from '../components/common/AdminPanel/AdminPanelHeader';
 import AdminPanelSidebar from '../components/common/AdminPanel/AdminPanelSidebar';
 import AdminPanelContentHeader from  '../components/common/AdminPanel/AdminPanelContentHeader';
+
 import { getUser } from '../store/authSlice';
+import { getApplications } from '../store/applicationsSlice';
 
 const AdminPanelLayout = () => {
-
   // Get user
-  const dispacth = useDispatch();
+  const dispatch = useDispatch();
   const token = useSelector(state => state.auth.token);
 
   React.useEffect(() =>  {
     if(token) {
-      dispacth(getUser());
+      dispatch(getUser());
     }
   }, [token]);
-    
+
+  React.useEffect(() => {
+    dispatch(getApplications());
+  }, [dispatch]);
 
   // Burger-menu and sidebar
   const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 1300);

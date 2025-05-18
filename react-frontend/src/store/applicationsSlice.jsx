@@ -110,6 +110,42 @@ export const uploadApplicationDocument = createAsyncThunk(
   }
 );
 
+export const fetchApplicationDocuments = createAsyncThunk(
+  'applications/fetchDocuments',
+  async (applicationId, { rejectWithValue, getState }) => {
+    try {
+      const { auth } = getState();
+      const response = await axios.get(`http://localhost:8000/api/applications/${applicationId}/documents`, {
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+        },
+      });
+
+      console.log('Документы из API:', response.data); 
+     return { applicationId, documents: response.data };
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Ошибка при загрузке документов');
+    }
+  }
+);
+
+export const deleteApplicationDocument = createAsyncThunk(
+  'applications/deleteDocument',
+  async (documentId, { rejectWithValue, getState }) => {
+    try {
+      const { auth } = getState();
+      await axios.delete(`http://localhost:8000/api/application-document/${documentId}`, {
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+        },
+      });
+      return documentId;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Ошибка при удалении документа');
+    }
+  }
+);
+
 const applicationsSlice = createSlice({
   name: 'applications',
   initialState: {
@@ -118,6 +154,7 @@ const applicationsSlice = createSlice({
     loading: false,
     error: null,
     success: false,
+    documents: [],
   },
   reducers: {
     clearSuccess: (state) => {
@@ -126,7 +163,6 @@ const applicationsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // createApplication
       .addCase(createApplication.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -143,7 +179,6 @@ const applicationsSlice = createSlice({
         state.success = false;
       })
 
-      // getApplications
       .addCase(getApplications.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -160,7 +195,6 @@ const applicationsSlice = createSlice({
         state.success = false;
       })
 
-      // getApplicationById
       .addCase(getApplicationById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -178,7 +212,6 @@ const applicationsSlice = createSlice({
         state.success = false;
       })
 
-      // deleteApplication
       .addCase(deleteApplication.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -195,7 +228,6 @@ const applicationsSlice = createSlice({
         state.success = false;
       })
 
-      // updateApplicationStatus
       .addCase(updateApplicationStatus.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -216,7 +248,30 @@ const applicationsSlice = createSlice({
         state.success = false;
       })
 
-      // uploadApplicationDocument
+      .addCase(fetchApplicationDocuments.pending, (state) => {
+      state.loading = true;
+      })
+      .addCase(fetchApplicationDocuments.fulfilled, (state, action) => {
+      state.documents = action.payload.documents;
+        state.loading = false;
+      })
+      .addCase(fetchApplicationDocuments.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(deleteApplicationDocument.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteApplicationDocument.fulfilled, (state, action) => {
+        state.loading = false;
+        state.documents = state.documents.filter(doc => doc.id !== action.payload);
+      })
+      .addCase(deleteApplicationDocument.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
       .addCase(uploadApplicationDocument.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -224,19 +279,26 @@ const applicationsSlice = createSlice({
       })
       .addCase(uploadApplicationDocument.fulfilled, (state, action) => {
         state.loading = false;
+        
         const index = state.applications.findIndex(app => app.id === action.payload.id);
         if (index !== -1) state.applications[index].documents = action.payload.documents;
+        
         if (state.currentApplication?.id === action.payload.id) {
           state.currentApplication.documents = action.payload.documents;
         }
+
+        state.documents = action.payload.documents;
+        
         state.success = true;
       })
       .addCase(uploadApplicationDocument.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         state.success = false;
-      });
-  }
+      })
+      
+
+    }
 });
 
 export const { clearSuccess } = applicationsSlice.actions;

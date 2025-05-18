@@ -58,16 +58,16 @@ const AdminPanelApplications = () => {
                 <img onClick={() => handleSort('title')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell">
+                Дата
+                <img onClick={() => handleSort('date')} className="col_sort" src={sortIcon} alt="Sort" />
+              </th>
+              <th className="table_cell">
                 Сп. связи
                 <img onClick={() => handleSort('title')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell">
                 Имя
                 <img onClick={() => handleSort('title')} className="col_sort" src={sortIcon} alt="Sort" />
-              </th>
-              <th className="table_cell">
-                Дата
-                <img onClick={() => handleSort('date')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell">
                 Контакты
@@ -79,10 +79,6 @@ const AdminPanelApplications = () => {
               <th className="table_cell">
                 Направл-е
                 <img onClick={() => handleSort('title')} className="col_sort" src={sortIcon} alt="Sort" />
-              </th>
-              <th className="table_cell">
-                Файлы
-                <img onClick={() => handleSort('date')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell"></th>
             </tr>
@@ -106,9 +102,7 @@ const AdminPanelApplications = () => {
                             {application.status === "Принято" && <p className='accepted_application'>Принято</p>}
                             {application.status === "Завершено" && <p className='completed_application'>Завершено</p>}
                         </td>
-                        <td>{application.communication_method === 'call' ? 'Позвонить' : 'Написать'}</td>
-                        <td className='td_width_limit'>{application.name}</td>
-                        <td className='date_td'>
+                         <td className='date_td'>
                             {new Date(application.created_at).toLocaleString('ru-RU', {
                                 day: '2-digit',
                                 month: '2-digit',
@@ -118,10 +112,11 @@ const AdminPanelApplications = () => {
                                 hour12: false,
                             })}
                         </td>
+                        <td>{application.communication_method === 'call' ? 'Позвонить' : 'Написать'}</td>
+                        <td className='td_width_limit'>{application.name}</td>
                         <td className='td_width_limit'>{application.contacts}</td>
                         <td>{application.communication_time || '—'}</td>
-                        <td className='td_width_limit'>{application.direction || '—'}</td>
-                        <td>{application.documents ? application.documents?.length : 0}</td>
+                        <td className='td_width_limit_direction'>{application.direction || '—'}</td>
                         <td>
                         <ActionsPopup
                             id={application.id}

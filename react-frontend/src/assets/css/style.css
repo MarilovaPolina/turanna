@@ -2157,6 +2157,7 @@ label{
 .certificates_list_block{
     border-radius: 12px;
     border: 1px solid #EAEAEA;
+    min-width: 17rem;
 }
 
 .certificates_list_block li{
@@ -2174,6 +2175,18 @@ label{
     max-width: 48px;
     object-fit: cover;
     object-position: center
+}
+
+.certificate_description{
+    display: flex;
+    align-items: center;
+}
+
+.certificates_list_block .certificate_title{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 14rem;
 }
 
 @media(max-width: 768px){
@@ -3117,6 +3130,7 @@ b{
 
 .admin_content_header .search {
     display: flex;
+    width: 100%;
     align-items: center;
 }
 
@@ -3129,26 +3143,36 @@ b{
     border: none;
     outline: none;
     padding: 1.2rem 0;
+    width: 100%;
 }
 
-.profile_part {
-    width: clamp(7.188rem, 6.899rem + 1.28vw, 8.438rem);
+.search_part {
+  flex: 1;
+  padding-right: 0.5rem;
+  min-width: 0;
+}
+
+.profile_part,
+.profile_part .table_actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-left: 0.5rem;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
 }
 
 .profile_info {
     display: flex;
     align-items: center;
+    margin-right: 0.5rem;
 }
 
 .profile_info .profile_name{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: clamp(2.7rem, 2.308rem + 3.08vw, 4rem);
+    max-width: clamp(6rem, 2.308rem + 3.08vw, 3.5rem);
+    font-weight: 300;
 }
 
 .profile_img {
@@ -3162,12 +3186,20 @@ b{
     margin-right: 0.3rem;
 }
 
+.profile_settings {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .profile_settings img{
     cursor: pointer;
     height: 21px;
     width: 21px;
     max-width: 100%;
     max-height: 100%;
+    object-fit: contain;
 }
 
 .admin_panel_content {
@@ -3289,6 +3321,13 @@ b{
 
 .td_width_limit{
     max-width: 100px;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+}
+
+.td_width_limit_direction{
+    max-width: 150px;
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis;
@@ -3830,4 +3869,63 @@ b{
     .details_inputs_wrapper{
         grid-template-columns: 1fr;
     }
+}
+
+
+
+/* EDIT APPLICATION PAGE */
+
+.application_data{
+    margin-bottom: 2rem;
+    border: 1px solid #d4d4d4;
+    padding: 1rem 0.5rem;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.application_data tr td:nth-child(1) {
+  width: 18%;
+  min-width: 120px;
+}
+
+.application_data td,
+.application_data th {
+  border: 1px solid #d4d4d4;
+  padding: 0.7rem;
+}
+
+.client_info {
+    color: var(--main-color);
+}
+
+.applicaton_status, .application_file_upload{
+    margin-bottom: 2rem;
+}
+
+.application_documents_table{
+    width: 40%;
+    min-width: 300px;
+    border: 1px solid #d4d4d4;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+}
+
+.application_documents_table td,
+.application_documents_table th{
+    border: 1px solid #d4d4d4;
+    padding: 0.7rem;
+}
+
+.application_documents_table tr td:nth-child(1) {
+  width: 30px;
+}
+
+.file_td{
+    display: flex;
+    justify-content: space-between;
+}
+
+.file_td span img{
+    height: 1rem;
+    cursor: pointer;
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\ApplicationDocumentController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CertificateController;
@@ -27,6 +28,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->post('/user', [AuthController::class, 'createUser']);
 Route::get('/users', [AuthController::class, 'index']);
@@ -38,7 +40,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->post('/upload-image', [ImageController::class, 'uploadByFile']);
 
 Route::middleware('auth:sanctum')->post('/info-sheets', [InfoSheetController::class, 'store']);
-Route::middleware('auth:sanctum')->get('/info-sheets', [InfoSheetController::class, 'index']);
+Route::get('/info-sheets', [InfoSheetController::class, 'index']);
 Route::middleware('auth:sanctum')->delete('/info-sheets/{id}', [InfoSheetController::class, 'destroy']);
 Route::middleware('auth:sanctum')->put('/info-sheets/{id}', [InfoSheetController::class, 'update']);
 
@@ -48,7 +50,7 @@ Route::middleware('auth:sanctum')->match(['post', 'put'], '/articles/{id}', [Art
 Route::middleware('auth:sanctum')->delete('/articles/{id}', [ArticleController::class, 'destroy']);
 Route::middleware('auth:sanctum')->get('/articles/{id}', [ArticleController::class, 'show']);
 
-Route::middleware('auth:sanctum')->get('/certificates', [CertificateController::class, 'index']);
+Route::get('/certificates', [CertificateController::class, 'index']);
 Route::middleware('auth:sanctum')->post('/certificates', [CertificateController::class, 'store']);
 Route::middleware('auth:sanctum')->delete('/certificates/{id}', [CertificateController::class, 'destroy']);
 Route::middleware('auth:sanctum')->match(['post', 'put'], '/certificates/{id}', [CertificateController::class, 'update']);
@@ -89,3 +91,8 @@ Route::middleware('auth:sanctum')->post('/partners', [PartnerController::class, 
 Route::middleware('auth:sanctum')->put('/partners/{id}', [PartnerController::class, 'update']);
 Route::middleware('auth:sanctum')->delete('/partners/{id}', [PartnerController::class, 'destroy']);
 Route::middleware('auth:sanctum')->get('/partners/{id}', [PartnerController::class, 'show']);
+
+Route::middleware('auth:sanctum')->post('/applications/{id}/document', [ApplicationDocumentController::class, 'store']);
+Route::middleware('auth:sanctum')->delete('/application-document/{id}', [ApplicationDocumentController::class, 'destroy']);
+Route::middleware('auth:sanctum')->get('/applications/{id}/documents', [ApplicationDocumentController::class, 'index']);
+

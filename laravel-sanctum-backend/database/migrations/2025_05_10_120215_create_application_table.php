@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('application', function (Blueprint $table) {
-            $table->id(); // ID
+            $table->unsignedInteger('id')->autoIncrement();
             $table->string('name');
             $table->enum('communication_method', ['call', 'chat']);
             $table->string('contacts');

@@ -5,8 +5,12 @@ import {
   getApplicationById,
   updateApplicationStatus,
   uploadApplicationDocument,
+  deleteApplicationDocument,
+  fetchApplicationDocuments,
   clearSuccess,
 } from '../../../../store/applicationsSlice';
+
+import closeIcon from "../../../../assets/img/icons/close.png"
 
 const AdminPanelEditApplication = () => {
   const { id } = useParams();
@@ -16,13 +20,22 @@ const AdminPanelEditApplication = () => {
     loading,
     error,
     success,
+    documents
   } = useSelector((state) => state.applications);
 
+  useEffect(() => {
+  console.log('Документы из стора:', documents);
+}, [documents]);
+
+  console.log(documents)
   const [selectedStatus, setSelectedStatus] = useState('');
-  const [documentFile, setDocumentFile] = useState(null);
 
   useEffect(() => {
-    dispatch(getApplicationById(id));
+    dispatch(getApplicationById(id)).then((action) => {
+      if (action.meta.requestStatus === 'fulfilled') {
+        dispatch(fetchApplicationDocuments(id)).then(() => console.log('fetchApplicationDocuments вызван'));
+      }
+    });
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -43,65 +56,116 @@ const AdminPanelEditApplication = () => {
     }
   };
 
-  const handleFileChange = (e) => {
-    setDocumentFile(e.target.files[0]);
-  };
+const handleFileChange = (e) => {  
+  e.preventDefault();
+  const file = e.target.files[0];
+  if (file) {
+    dispatch(uploadApplicationDocument({ id, file })).then((action) => {
+      if (action.meta.requestStatus === 'fulfilled') {
+        dispatch(fetchApplicationDocuments(id));
+      }
+    });
+  }
+};
 
-  const handleUpload = () => {
-    if (documentFile) {
-      dispatch(uploadApplicationDocument({ id, file: documentFile }));
-      setDocumentFile(null);
-    }
-  };
 
+
+const confirmDeleteDocument = (docName) => window.confirm(`Вы точно хотите удалить документ с именем ${docName}?`);
+
+const handleDeleteDocumentWithConfirm = (doc) => {
+  if (confirmDeleteDocument(doc.original_name || 'Документ')) {
+    dispatch(deleteApplicationDocument(doc.id)).then((action) => {
+      if (action.meta.requestStatus === 'fulfilled') {
+        dispatch(fetchApplicationDocuments(id));
+      }
+    });
+  }
+};
   if (loading || !currentApplication) return <div>Загрузка...</div>;
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
   return (
-    <div>
-      <h2>Заявка №{id}</h2>
-      <p><strong>Имя:</strong> {currentApplication.name}</p>
-      <p><strong>Метод связи:</strong> {currentApplication.communication_method}</p>
-      <p><strong>Контакты:</strong> {currentApplication.contacts}</p>
-      <p><strong>Удобное время связи:</strong> {currentApplication.communication_time}</p>
-      <p><strong>Направление:</strong> {currentApplication.direction}</p>
-      <p><strong>Бюджет:</strong> {currentApplication.budget}</p>
-      <p><strong>Примечания:</strong> {currentApplication.notes}</p>
-
-      <div>
-        <label>Статус: </label>
-        <select
-          value={selectedStatus}
-          onChange={(e) => setSelectedStatus(e.target.value)}
-        >
-          <option value="">Выберите статус</option>
-          <option value="новая">Новая</option>
-          <option value="в работе">В работе</option>
-          <option value="завершена">Завершена</option>
-        </select>
-        <button onClick={handleStatusChange}>Сохранить</button>
+    <div className="admin_panel_content">
+      <div className="creation_heading">
+        <p className="small_title_text">Заявка №{id}</p>
+        <p className="creation_heading_subtitle">
+          Здесь вы можете изменить статус заявки и прикрепить к ней документы, которые могут понадобиться (документы, чеки, договоры).
+        </p>
       </div>
 
-      <div>
+      <div className="form_container">
+        <table className="application_data">
+          <tbody>
+            <tr><td>Имя:</td><td className='client_info'>{currentApplication.name || "–"}</td></tr>
+            <tr><td>Метод связи:</td><td className='client_info'>
+              {currentApplication.communication_method === "chat" ? "Написать" : currentApplication.communication_method === "call" ? "Позвонить" : "–"}
+            </td></tr>
+            <tr><td>Контакты:</td><td className='client_info'>{currentApplication.contacts || "–"}</td></tr>
+            <tr><td>Удобное время связи:</td><td className='client_info'>{currentApplication.communication_time || "–"}</td></tr>
+            <tr><td>Направление:</td><td className='client_info'>{currentApplication.direction || "–"}</td></tr>
+            <tr><td>Бюджет:</td><td className='client_info'>{currentApplication.budget || "–"}</td></tr>
+            <tr><td>Примечания:</td><td className='client_info'>{currentApplication.notes || "–"}</td></tr>
+          </tbody>
+        </table>
+
+        <div className='applicaton_status'>
+          <label>Статус: </label>
+          <select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+          >
+            <option value="">Выберите статус</option>
+            <option value="Новая">Новая</option>
+            <option value="Принято">Принято</option>
+            <option value="Отклонено">Отклонено</option>
+            <option value="Завершено">Завершено</option>
+          </select>
+        </div>
+
+       <div className='application_file_upload'>
         <h3>Загрузить документ</h3>
         <input type="file" onChange={handleFileChange} />
-        <button onClick={handleUpload}>Загрузить</button>
       </div>
 
-      {currentApplication.documents && currentApplication.documents.length > 0 && (
-        <div>
-          <h3>Загруженные документы</h3>
-          <ul>
-            {/*currentApplication.documents.map((doc, index) => (
-              <li key={index}>
-                <a href={doc.url} target="_blank" rel="noopener noreferrer">{doc.original_name}</a>
-              </li>
-            ))*/}
-          </ul>
-        </div>
-      )}
+        {documents && documents.length > 0 && (
+  <div>
+    <table className="application_documents_table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Название</th>
+        </tr>
+      </thead>
+      <tbody>
+        {documents.map((doc, index) => (
+          <tr key={doc.id}>
+            <td>{index + 1}</td>
+            <td className='file_td'>
+              <a
+                href={`http://localhost:8000/storage/${doc.file_path}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {doc.original_name || 'Документ'}
+              </a>
+             <span onClick={() => handleDeleteDocumentWithConfirm(doc)}>
+          <img src={closeIcon} />
+        </span>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
 
-      {success && <p style={{ color: 'green' }}>Успешно сохранено</p>}
+
+        <button type="button" className="blue_btn" disabled={loading} onClick={handleStatusChange}>
+          {loading ? 'Сохранение...' : 'Сохранить'}
+        </button>
+
+        {success && <p style={{ color: 'green' }}>Успешно сохранено</p>}
+      </div>
     </div>
   );
 };

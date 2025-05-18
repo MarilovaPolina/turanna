@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import logo from '../../../assets/img/logo.png';
@@ -31,7 +31,9 @@ const AdminPanelSidebar = ({ isMobile, sidebarOpen }) => {
         <aside>
             <div className={`admin_sidebar ${isMobile ? (sidebarOpen ? 'visible' : 'hidden') : ''}`}>
                 <div className="logo_wrapper">
-                    <img className="logo_img" src={logo} alt="Logo" />
+                    <Link to="/">
+                        <img className="logo_img" src={logo} alt="Logo" />
+                    </Link>
                     <div className="logo_text_wrapper">
                         <p className="logo_text">TURANNA ON-LINE</p>
                         <b><p>Админ-панель</p></b>

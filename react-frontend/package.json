@@ -13,6 +13,7 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.8.4",
+    "editorjs-react-renderer": "^3.5.1",
     "embla-carousel-react": "^8.6.0",
     "eslint-config-react-app": "^7.0.1",
     "gsap": "^3.12.7",
@@ -48,4 +49,4 @@
       "last 1 safari version"
     ]
   }
-} 
+}
