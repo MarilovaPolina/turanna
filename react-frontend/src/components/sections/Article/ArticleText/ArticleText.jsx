@@ -1,33 +1,23 @@
 import React from "react";
 
-function ArticleText(){
+import EditorContentArticle from "../../../common/TextEditor/EditorContentArticle";
+
+function ArticleText({content}){
+    console.log(content)
+    let parsedContent;
+
+    try {
+        parsedContent = typeof content === "string" ? JSON.parse(content) : content;
+    } catch (error) {
+        console.error("Ошибка при загрузке статьи:", error);
+        parsedContent = { blocks: [] };
+    }
+
+    console.log("SSSSSSSS ", parsedContent)
     return(
-        <>
-            <p>
-                Раннее бронирование — это не просто модный тренд, а выгодная стратегия для тех, кто хочет
-                получить лучшие условия отдыха. Разберёмся, какие преимущества даёт планирование поездки
-                заранее и как это поможет сэкономить деньги, время и нервы.
-            </p>
-            <br />
-            <p className="small_title_text">
-                Экономия до 30-50%
-            </p>
-            <p>
-                Туры по «раннему бронированию» часто продаются со скидками, так как туроператоры
-                заинтересованы в быстром заполнении мест. Чем ближе к дате вылета, тем выше цены — особенно
-                в сезон.
-            </p>
-            <b>
-                <p className="ul_title">Что можно сэкономить:</p>
-            </b>
-            <ul className="list">
-                <li>Дешевые авиабилеты</li>
-                <li>Лучшие номера в отелях</li>
-                <li>Бонусы (трансфер, экскурсии, питание)</li>
-            </ul>
-            <img className="simple_article_img" src="assets/img/egypt.png" loading="lazy" />
-            <p className="substring copyright">Фото от <a href="#">Кононова Валерия Игоревна</a></p>
-        </>
+        <div className="editor-content-preview">
+           <EditorContentArticle content={parsedContent} />
+        </div>
     );
 }
 

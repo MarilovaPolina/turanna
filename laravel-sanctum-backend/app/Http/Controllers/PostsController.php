@@ -16,7 +16,7 @@ class PostsController extends Controller
 
         $tours = TourPackage::select('id', 'title', 'departure_city', 'arrival_city', 'created_at', 'main_image', 'description')
             ->with(['tours' => function ($query) {
-                $query->select('id', 'tour_package_id', 'start_date', 'nights', 'price');
+                $query->select('id', 'tour_package_id', 'start_date', 'nights', 'price', 'arrival_country');
             }])
             ->get()
             ->map(function ($item) {

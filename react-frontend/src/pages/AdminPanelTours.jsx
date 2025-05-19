@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import AdminPanelToursContentContent from '../components/sections/AdminPanel/AdminPanelToursContent/AdminPanelToursContentContent';
 

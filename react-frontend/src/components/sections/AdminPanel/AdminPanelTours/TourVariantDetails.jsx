@@ -140,7 +140,7 @@ const TourVariantDetails = ({ index, variant, handleTourVariantChange }) => {
         <div className="form_group">
           <label htmlFor={`distance_nature_${index}`}>
             <img src={nationalParkIcon} />
-            Расст. до природ объекта
+            Расст. до достопримечатльности
           </label>
           <input
             type="text"

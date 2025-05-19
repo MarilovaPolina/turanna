@@ -31,7 +31,7 @@ return new class extends Migration
             $table->enum('childcare', ['no', 'yes_paid', 'yes_free', 'yes'])->nullable();
             $table->enum('pool', ['yes', 'no'])->nullable();
             $table->enum('gym', ['yes', 'no'])->nullable();
-            $table->string('hotel_link', 35)->nullable();
+            $table->text('hotel_link')->nullable();
             $table->enum('visa_required', ['yes', 'no'])->nullable();
 
             $table->timestamps();

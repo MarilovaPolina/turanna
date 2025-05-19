@@ -9,6 +9,12 @@
     --red: #c62828;
 }
 
+@media (max-width: 1600px) {
+  html {
+    zoom: 0.9;
+  }
+}
+
 /* cursor */
 
 .mf-cursor {
@@ -211,10 +217,6 @@ textarea{
     gap: 2.5rem;
 }
 
-.menu ul li a{
-   color: white;
-}
-
 .pick_tour_btn{
     background-color:var(--main-color);
     text-transform: uppercase;
@@ -227,12 +229,6 @@ textarea{
 
 .pick_tour_btn:hover{
     background-color:  #37618c;
-}
-
-@media(max-width:768px){
-    .menu{
-        display: none;
-    }
 }
 
 /* menu */
@@ -384,6 +380,90 @@ textarea{
 }
 
 
+/* COMMON HEADER burger-menu */
+.menu_desktop {
+    display: block;
+}
+.burger_menu_ch{
+    display: none;
+}
+
+.burger_menu_ch {
+    width: 30px;
+    height: 20px;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.burger_menu_ch span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: #333;
+    transition: all 0.3s ease;
+}
+
+.burger_menu_ch.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.burger_menu_ch.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.burger_menu_ch.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+.mobile_menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100%;
+    background-color: white;
+    z-index: 100;
+    transition: right 0.3s ease;
+    display: none;
+    padding: 20px;
+}
+
+@media (max-width: 768px) {
+    .menu_desktop {
+        display: none;
+    }
+    .burger_menu_ch {
+        display: flex;
+    }
+    .mobile_menu {
+        display: block;
+    }
+    .mobile_menu.active {
+        right: 0;
+    }
+    .menu ul{
+        display: block;
+        margin-top: 2rem;
+    }
+    .menu ul li{
+        padding: 1rem 0;
+    }
+    .menu ul li a{
+        color: var(--black-text);
+        font-size: 20px;
+    }
+    .get_tour_btn{
+        margin-top: 0.5rem;
+    }
+    .get_tour_btn a{
+       display: block;
+        width: 100%;
+    }
+}
+
+/* COMMON HEADER burger-menu */
+
 
 /*INTRO*/
 
@@ -475,13 +555,21 @@ textarea{
     gap: 0.9rem;
 }
 
+.posts_container a{
+    display: flex;
+    height: 100%; 
+    text-decoration: none; 
+    color: inherit; 
+}
+
 .post_card {
     cursor: pointer;
     background: #fff;
     border-radius: 12px;
     padding: clamp(0.75rem, 0.583rem + 0.74vw, 1.25rem);
     transition: all 0.1s ease;
-
+    color: var(--grey-text) ;
+    flex-grow: 1; 
     display: flex;
     flex-direction: column;
     border: 1px solid rgba(212, 212, 212, 0);
@@ -560,6 +648,15 @@ textarea{
 }
 
 /* main_card */
+.main_card_link{
+    width: 100%;
+    display: block;
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+}
+
 .main_card {
     grid-column: 1 / -1;
     display: grid;
@@ -698,14 +795,18 @@ textarea{
 }
 
 .tour_variants_card{
-    margin: 0.5rem 0;
+    margin: 1rem 0;
 }
 
 .tour_variant{
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     font-size: clamp(0.75rem, -0.5rem + 2vw, 1rem);
 }
+
+.tour_variant .variant_price{
+    text-align: right;
+} 
 
 .more_variants{
     text-decoration: underline !important;
@@ -1546,6 +1647,10 @@ textarea{
 
 /* WHERE TO FIND */
 
+#contacts {
+  scroll-margin-top: -250px;
+}
+
 .where_to_find_block{
     margin-top: 11.25rem;
 }
@@ -1891,6 +1996,7 @@ label{
 
 .partners_line {
     margin-top: 11.25rem;
+    margin-bottom: -6rem;
 }
 
 .partners_ticker {
@@ -1905,6 +2011,7 @@ label{
     display: flex;
     white-space: nowrap;
     -webkit-transform-style: preserve-3d;
+    animation: ticker_partners 30s linear infinite;
 }
 
 .partners_line .ticker__item_partners {
@@ -1916,8 +2023,8 @@ label{
     -webkit-backface-visibility: hidden;
 }
 
-.partners_line .ticker__item_partners img {
-    height: 100%;
+.partners_line .ticker__item_partners a img {
+    height: 115px;
     width: auto; 
     object-fit: contain;
 }
@@ -2486,6 +2593,11 @@ ol li ul li{
     background-color: #83A4C5;
     border-radius: 12px;
     padding: 0.8rem;
+    transition: all 0.2s;
+}
+
+.copy_link_panel:hover {
+    background-color: #789abd;
 }
 
 .travel_together_image{
@@ -2560,7 +2672,7 @@ ol li ul li{
 .about_tour{
     border: 1px solid #EAEAEA;
     padding: clamp(1rem, 0.896rem + 0.46vw, 1.313rem) clamp(0.813rem, 0.771rem + 0.19vw, 0.938rem);
-    padding-bottom: 0.2rem;
+    padding-bottom: 0.4rem;
     border-radius: 7px;
 }
 
@@ -2598,6 +2710,12 @@ ol li ul li{
 
 .details_text_part .details_content{
     line-height: 110%;
+    margin-bottom: 0.6rem;
+}
+
+.hotel_link{
+    color: var(--main-color);
+    text-decoration: underline !important;
 }
 
 .info_label{
@@ -2777,6 +2895,11 @@ b{
 
 .info_sheet_content p{
     margin-bottom: 1rem;
+}
+
+.content_text_block{
+    padding: 2rem 2rem !important;
+    padding-bottom: 8rem !important;
 }
 
 .info_sheet_sidebar_btn{
@@ -2975,6 +3098,11 @@ b{
 
 /* LOGIN */
 
+.auth_wrapper{
+    height: 100vh;
+    width: 100vw;
+}
+
 .login_block{
     background-color: white;
     position: absolute;
@@ -2984,7 +3112,7 @@ b{
     left: 50%;
     transform: translate(-50%, -50%);
     max-width: 1010px;
-    width: 25%; 
+    width: 30%; 
     min-width: 335px;
     background-color: white;
     border-radius: clamp(0.75rem, 0.479rem + 1.2vw, 1.563rem);
@@ -3246,8 +3374,7 @@ b{
 
 .data_table .finished{
     background-color: #f5f5f5;
-    opacity: 0.5;
-    color: #8d8d8d;
+    color: #cecece;
 }
 
 
@@ -3929,3 +4056,138 @@ b{
     height: 1rem;
     cursor: pointer;
 }
+
+
+/* JSON ARTICLE PARSE */
+.editor-content-preview h1{
+    font-family: Oswald;
+    font-weight: bold;
+    color: var(--black-text);
+    text-transform: uppercase;
+    line-height: 95%;
+    font-size: clamp(1.25rem, 1.167rem + 0.37vw, 1.5rem);
+    margin-top: 2rem;
+}
+
+.editor-content-preview figure img{
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.editor-content-preview p{
+    margin-top: 0.8rem;
+    line-height: 150%;
+    font-size: clamp(1.125rem, 1.096rem + 0.13vw, 1.25rem);
+}
+
+.editor-content-preview ol li ul li{
+    margin-left: 1.5rem !important;
+}
+
+.editor-content-preview .ul_title{
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem !important;
+}
+
+.editor-content-preview ul li,
+.editor-content-preview ul ul{
+    list-style: disc;
+    margin-left: 3rem;
+    line-height: 150%;
+    margin-top: 0.8rem;
+    font-size: clamp(1.125rem, 1.096rem + 0.13vw, 1.25rem);
+}
+
+.editor-content-preview ol li,
+.editor-content-preview ol ol{
+    margin-left: 3rem;
+    line-height: 150%;
+    margin-top: 0.8rem;
+    font-size: clamp(1.125rem, 1.096rem + 0.13vw, 1.25rem);
+}
+
+.editor-content-preview ul li::marker,
+.editor-content-preview ol li::marker {
+    color: var(--main-color);
+    font-weight: 800;
+}
+
+.editor-content-preview ol li b,
+.editor-content-preview ul li b{
+    margin-top: 0.3rem;
+}
+
+
+
+
+/* ALL POSTS PAGE */
+
+.posts_heading{
+    margin-top: clamp(5rem, 2.077rem + 4.1vw, 7rem);
+}
+
+.posts_heading .title_text{
+    margin-bottom: 0.9rem;
+}
+
+.posts_filter input,
+.posts_filter select{
+    border: none;
+}
+.posts_search_block .search{
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 7px;
+    padding: 0 1rem;
+
+}
+
+.posts_search_block .search img{
+    height: 20px;
+}
+
+.posts_filters_block{
+    margin-top: 0.9rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 0.3rem;
+}
+
+.all_posts{
+    margin-top: 2rem;
+}
+
+.all_posts_load_more{
+    width: 100%;
+    margin-top: 3rem;
+    border: 1px solid var(--main-color);
+    padding: 2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.all_posts_load_more:hover{
+    background-color: rgba(77, 124, 172, 0.2);
+}
+
+.load_more_btn{
+    margin: 0 auto !important; 
+    float: none;
+}
+
+.calendar_input{
+    background-color: white;
+    border: none;
+    border-radius: 7px;
+}
+
+@media(max-width: 768px){
+    .posts_filters_block{
+        margin-top: 0.9rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.3rem;
+    }
+}
+

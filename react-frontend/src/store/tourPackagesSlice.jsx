@@ -141,14 +141,9 @@ export const deleteTour = createAsyncThunk(
 
 export const getTourPackageById = createAsyncThunk(
   'tourPackage/getTourPackageById',
-  async (id, { rejectWithValue, getState }) => {
+  async (id, { rejectWithValue}) => {
     try {
-      const { auth } = getState();
-      const response = await axios.get(`http://localhost:8000/api/tour-packages/${id}`, {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
-      });
+      const response = await axios.get(`http://localhost:8000/api/tour-packages/${id}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(

@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 import IntroSection from "../components/sections/HomePage/IntroSection/IntroSection";
 import PostsSection from "../components/common/PostsSection/PostsSection";
@@ -13,12 +14,26 @@ import OtherQuestionsSection from "../components/common/OtherQuestionsSection/Ot
 import ApplicationFormSection from "../components/common/ApplicationFormSection/ApplicationFormSection";
 import PartnersTicker from "../components/common/PartnersTicker/PartnersTicker";
 import ApplicationPopup from "../components/common/Popup/ApplicationPopup";
+import { ClassNames } from "@emotion/react";
 
 
 function HomePage(){
 
+    const location = useLocation();
+
+    React.useEffect(() => {
+        if (location.hash) {
+            const element = document.querySelector(location.hash);
+            if (element) {
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: "smooth" });
+                }, 400);
+            }
+        }
+    }, [location]);
+
     return(
-        <>
+        <div className="home_page">
             <IntroSection />
             <PostsSection />
             <VariantsApplicationsSection />
@@ -27,11 +42,11 @@ function HomePage(){
             <HowWeWork />
             <ReviewsVkSection />
             <WhyUsSection />
-            <WhereToFindSection />
+            <WhereToFindSection/>
             <OtherQuestionsSection />
             <ApplicationFormSection />
             <PartnersTicker /> 
-        </>
+        </div>
     );
 }
 

@@ -71,16 +71,9 @@ export const updateArticle = createAsyncThunk(
 
 export const getArticles = createAsyncThunk(
   'article/getArticles',
-  async(_, { rejectWithValue, getState }) => {
+  async(_, { rejectWithValue}) => {
     try{
-      const { auth } = getState();
-      const { data } = await axios.get('http://localhost:8000/api/articles', {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
-          
-      });
-
+      const { data } = await axios.get('http://localhost:8000/api/articles');
       return data;
     }
     catch(error){
@@ -89,6 +82,18 @@ export const getArticles = createAsyncThunk(
     }
   }
 )
+
+export const getArticleById = createAsyncThunk(
+  'article/getArticleById',
+  async (id, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(`http://localhost:8000/api/articles/${id}`);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Ошибка при получении статьи");
+    }
+  }
+);
 
 const articleSlice = createSlice({
   name: 'article',
@@ -169,6 +174,22 @@ const articleSlice = createSlice({
         );
       })
       .addCase(updateArticle.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
+      })
+
+      .addCase(getArticleById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(getArticleById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.article = action.payload;
+        state.success = true;
+      })
+      .addCase(getArticleById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
         state.success = false;

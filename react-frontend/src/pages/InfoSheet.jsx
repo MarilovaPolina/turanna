@@ -21,7 +21,7 @@ function InfoSheet(){
         }
     }, [infoSheets, selectedSheet]);
     
-    if (infoSheets.length === 0) return <>Загрузка...</>
+
     return(
         <>
             <div className="info_sheet_block">

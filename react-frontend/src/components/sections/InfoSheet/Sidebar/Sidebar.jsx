@@ -1,13 +1,16 @@
 import React from "react";
 
+import menuIcon from "../../../../assets/img/icons/menu.png"
+
 function Sidebar({ infoSheets, selectedId, onSelect }) {
     console.log('Sidebar infoSheets:', infoSheets);
     
+    if (infoSheets.length === 0) return <>Загрузка...</>
   return (
     <>
       <button className="info_sheet_sidebar_btn">
         <p>Содержание</p>
-        <img src="assets/img/icons/menu.png" alt="menu" />
+        <img src={menuIcon} alt="menu" />
       </button>
 
       <aside className="white_block info_sheet_sidebar">

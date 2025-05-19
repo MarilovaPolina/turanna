@@ -118,6 +118,7 @@ const AdminPanelCreateTourPackage = () => {
         if (!variant.hotel_name) newErrors[`hotel_name_${index}`] = 'Обязательное поле';
         if (!variant.tour_start) newErrors[`tour_start_${index}`] = 'Обязательное поле';
         if (!variant.tour_finish) newErrors[`tour_finish_${index}`] = 'Обязательное поле';
+        if (!variant.arrival_country) newErrors[`variant_arrival_country_${index}`] = 'Обязательное поле';
         if (!variant.tour_nights) newErrors[`tour_nights_${index}`] = 'Обязательное поле';
         if (variant.tour_nights < 0)
           newErrors[`tour_nights_${index}`] = 'Количество ночей не может быть меньше ноля';
@@ -356,7 +357,7 @@ const AdminPanelCreateTourPackage = () => {
                         )}
                       </div>
                       <div className="form_group">
-                        <label htmlFor={`arrival_country_${index}`}>Страна прибытия</label>
+                        <label htmlFor={`arrival_country_${index}`}>Страна прибытия <span className="star">*</span></label>
                         <input
                           type="text"
                           className={`admin_input ${
@@ -366,6 +367,7 @@ const AdminPanelCreateTourPackage = () => {
                           name="arrival_country"
                           value={variant.arrival_country}
                           onChange={(e) => handleTourVariantChange(index, e)}
+                          required
                         />
                         {errors[`variant_arrival_city_${index}`] && (
                           <span className="error_msg">

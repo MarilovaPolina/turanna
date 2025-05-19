@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 //import MouseFollowerCursor from './components/MouseFollowerCursor';
 
 import MainLayout from './layouts/MainLayout';
@@ -33,18 +33,32 @@ import AdminPanelEditTourPackage from './components/sections/AdminPanel/AdminPan
 import AdminPanelCreatePartner from './components/sections/AdminPanel/AdminPanelPartners/AdminPanelCreatePartner';
 import AdminPanelPartners from './components/sections/AdminPanel/AdminPanelPartners/AdminPanelPartners';
 import AdminPanelEditPartner from './components/sections/AdminPanel/AdminPanelPartners/AdminPanelEditPartner';
+import AllPosts from './pages/AllPosts';
+
+function ScrollToTop() {
+    const { pathname, hash } = useLocation();
+
+    React.useEffect(() => {
+        if (hash) return;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [pathname]);
+
+    return null;
+}
 
 function App() {
+ 
     return (
         <BrowserRouter>
-            
+            <ScrollToTop />
             <Routes>
                 <Route path="/" element={<MainLayout />} >
                     <Route index element={<HomePage />} />
                     <Route path="/about_us" element={<AboutUs />} />
-                    <Route path="/article_vacation_package" element={<ArticleVacationPackage />} />
-                    <Route path="/article" element={<Article />} />
+                    <Route path="/article_vacation_package/:id" element={<ArticleVacationPackage />} />
+                    <Route path="/article/:id" element={<Article />} />
                     <Route path="/info_sheet" element={<InfoSheet />} />
+                    <Route path="/posts" element={<AllPosts />} />
 
                     <Route path="/login" element={<Auth isLogin={true} />} />
                     <Route path="/register" element={<Auth isLogin={false} />} />

@@ -44,11 +44,11 @@ Route::get('/info-sheets', [InfoSheetController::class, 'index']);
 Route::middleware('auth:sanctum')->delete('/info-sheets/{id}', [InfoSheetController::class, 'destroy']);
 Route::middleware('auth:sanctum')->put('/info-sheets/{id}', [InfoSheetController::class, 'update']);
 
-Route::middleware('auth:sanctum')->get('/articles', [ArticleController::class, 'index']);
+Route::get('/articles', [ArticleController::class, 'index']);
 Route::middleware('auth:sanctum')->post('/articles', [ArticleController::class, 'store']);
 Route::middleware('auth:sanctum')->match(['post', 'put'], '/articles/{id}', [ArticleController::class, 'update']);
 Route::middleware('auth:sanctum')->delete('/articles/{id}', [ArticleController::class, 'destroy']);
-Route::middleware('auth:sanctum')->get('/articles/{id}', [ArticleController::class, 'show']);
+Route::get('/articles/{id}', [ArticleController::class, 'show']);
 
 Route::get('/certificates', [CertificateController::class, 'index']);
 Route::middleware('auth:sanctum')->post('/certificates', [CertificateController::class, 'store']);
@@ -62,10 +62,10 @@ Route::middleware('auth:sanctum')->put('/applications/{id}/status', [Application
 Route::middleware('auth:sanctum')->post('/applications/{id}/document', [ApplicationController::class, 'uploadDocument']);
 Route::middleware('auth:sanctum')->get('/applications/{id}', [ApplicationController::class, 'show']);
 
+Route::get('/tour-packages/{id}', [TourPackageController::class, 'show']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/tour-packages', [TourPackageController::class, 'index']);
     Route::post('/tour-packages', [TourPackageController::class, 'store']);
-    Route::get('/tour-packages/{id}', [TourPackageController::class, 'show']);
     Route::match(['post', 'put'], '/tour-packages/{id}', [TourPackageController::class, 'update']);
     Route::delete('/tour-packages/{id}', [TourPackageController::class, 'destroy']);
 
@@ -86,7 +86,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::get('/posts-content', [PostsController::class, 'index']);
 
-Route::middleware('auth:sanctum')->get('/partners', [PartnerController::class, 'index']);
+Route::get('/partners', [PartnerController::class, 'index']);
 Route::middleware('auth:sanctum')->post('/partners', [PartnerController::class, 'store']);
 Route::middleware('auth:sanctum')->put('/partners/{id}', [PartnerController::class, 'update']);
 Route::middleware('auth:sanctum')->delete('/partners/{id}', [PartnerController::class, 'destroy']);
