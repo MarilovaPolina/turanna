@@ -24,10 +24,7 @@ export const createCertificate = createAsyncThunk(
           'Content-Type': 'multipart/form-data',
         },
       });
-      formData.forEach((value, key) => {
-        console.log(key, value);
-      });
-      
+
       return response.data;
     } catch (error) {
       if (error.response?.status === 422) {

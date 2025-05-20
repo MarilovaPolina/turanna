@@ -16,7 +16,7 @@ const AdminPanelContentHeader = () => {
                     </div>
                 </div>
                 <div className="profile_part">
-                    <ProfilePopup onLogout={console.log("sdds")} />
+                    <ProfilePopup />
                     
                 </div>
             </div>

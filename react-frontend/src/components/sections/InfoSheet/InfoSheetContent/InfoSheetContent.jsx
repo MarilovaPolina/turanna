@@ -7,7 +7,7 @@ function InfoSheetContent({ title, content }) {
     parsedContent = typeof content === "string" ? JSON.parse(content) : content;
   } catch (error) {
     parsedContent = { blocks: [] };
-    console.error("Error parsing content JSON:", error);
+    console.error("Ошибка при расшифровывании JSON:", error);
   }
 
   return (

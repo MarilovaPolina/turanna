@@ -18,8 +18,6 @@ function ArticleVacationPackage(){
         dispatch(getArticleById(id));
     }, [id]);
 
-    console.log(article)
-
   if (loading || !article) return <div>Загрузка...</div>;
 
     return(

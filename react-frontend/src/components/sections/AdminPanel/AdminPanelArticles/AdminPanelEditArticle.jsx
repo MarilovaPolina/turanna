@@ -150,10 +150,10 @@ const AdminPanelEditArticle = () => {
               {mainImage ? (
                 <img src={URL.createObjectURL(mainImage)} />
               ) : previewImage ? (
-                <img src={`http://localhost:8000${previewImage}`} alt="certificate" />
+                <img src={`http://localhost:8000${previewImage}`} />
               ) : (
                 <>
-                  <img src={uploadImageIcon} className="upload_img_icon" alt="upload" />
+                  <img src={uploadImageIcon} className="upload_img_icon" />
                   <h3>Нажмите, чтобы выбрать фото</h3>
                 </>
               )}

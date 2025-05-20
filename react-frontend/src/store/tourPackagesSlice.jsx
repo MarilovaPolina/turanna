@@ -8,23 +8,19 @@ export const createTourPackage = createAsyncThunk(
       const { auth } = getState();
       const formData = new FormData();
 
-      // tour_package
       formData.append('title', formState.package_name);
       formData.append('departure_city', formState.departure_city);
       formData.append('arrival_city', formState.arrival_city);
       formData.append('description', JSON.stringify(formState.description));
 
-      // main image upload
       if (formState.galleryImages.length > 0) {
         formData.append('main_image', formState.galleryImages[0].file);
       }
 
-      // image gallery
       formState.galleryImages.forEach((imgObj) => {
         formData.append('gallery[]', imgObj.file);
       });
 
-      // tour details
       const tours = formState.tourVariants.map((variant) => {
         const detailsFields = [
           'room_class',
@@ -78,11 +74,6 @@ export const createTourPackage = createAsyncThunk(
             formData.append('hotel_images[]', imgObj.file);
           }
         });
-      }
-
-      console.log('Отправляемые данные:');
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
       }
 
       const { data } = await axios.post('http://localhost:8000/api/tour-packages', formData, {

@@ -6,7 +6,6 @@ import Footer from '../components/common/Footer';
 import ApplicationPopup from '../components/common/Popup/ApplicationPopup';
 
 const MainLayout = () => {
-/* Popup */
   const [isPopupOpen, setIsPopupOpen] = React.useState(false);
   const [communicationMethod, setCommunicationMethod] = React.useState('call');
   const openPopup = (method) => {

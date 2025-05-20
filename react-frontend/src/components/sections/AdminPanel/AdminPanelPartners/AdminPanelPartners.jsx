@@ -55,7 +55,7 @@ const AdminPanelPartners = () => {
               </th>
               <th className="table_cell">
                 Название
-                <img onClick={() => handleSort('title')} className="col_sort" src={sortIcon} alt="Sort" />
+                <img onClick={() => handleSort('name')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell">
                 Ссылка
@@ -65,7 +65,7 @@ const AdminPanelPartners = () => {
               </th>
               <th className="table_cell">
                 Дата создания
-                <img onClick={() => handleSort('date')} className="col_sort" src={sortIcon} alt="Sort" />
+                <img onClick={() => handleSort('created_at')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell"></th>
             </tr>

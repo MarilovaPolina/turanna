@@ -37,7 +37,9 @@ const AdminPanelApplications = () => {
     }
   };
 
-  const sortedApplications = sortData(applications, sortBy, sortOrder); 
+ const sortedApplications = React.useMemo(() => {
+  return sortData(applications, sortBy, sortOrder);
+}, [applications, sortBy, sortOrder]);
   return (
     <div className="admin_panel_content">
       <div className="content_heading">
@@ -47,42 +49,43 @@ const AdminPanelApplications = () => {
 
       <div className="table_container">
         <table className="data_table">
-          <thead>
+         <thead>
             <tr className="table_row">
-            <th className="table_cell">
+              <th className="table_cell">
                 ID
                 <img onClick={() => handleSort('id')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell">
                 Статус
-                <img onClick={() => handleSort('title')} className="col_sort" src={sortIcon} alt="Sort" />
+                <img onClick={() => handleSort('status')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell">
                 Дата
-                <img onClick={() => handleSort('date')} className="col_sort" src={sortIcon} alt="Sort" />
+                <img onClick={() => handleSort('created_at')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell">
                 Сп. связи
-                <img onClick={() => handleSort('title')} className="col_sort" src={sortIcon} alt="Sort" />
+                <img onClick={() => handleSort('communication_method')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell">
                 Имя
-                <img onClick={() => handleSort('title')} className="col_sort" src={sortIcon} alt="Sort" />
+                <img onClick={() => handleSort('name')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell">
                 Контакты
               </th>
               <th className="table_cell">
                 Время связи
-                <img onClick={() => handleSort('title')} className="col_sort" src={sortIcon} alt="Sort" />
+                <img onClick={() => handleSort('communication_time')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell">
                 Направл-е
-                <img onClick={() => handleSort('title')} className="col_sort" src={sortIcon} alt="Sort" />
+                <img onClick={() => handleSort('direction')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell"></th>
             </tr>
           </thead>
+
           <tbody>
             {loading ? (
               <tr>

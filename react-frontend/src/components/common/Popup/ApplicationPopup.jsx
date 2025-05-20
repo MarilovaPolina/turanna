@@ -20,7 +20,6 @@ function ApplicationPopup({ isOpen, onClose, communicationMethod }) {
         setChosenCommunicationMethod(e.target.value);
     };
 
-    // Отправка заявки
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -36,6 +35,7 @@ function ApplicationPopup({ isOpen, onClose, communicationMethod }) {
         };
         dispatch(createApplication(data));
         onClose(); 
+        alert("Вы успешно отправили заявку.\nОжидайте обратной связи — мы свяжемся в подходящее для вас время.\nСпасибо, что выбираете Туранна.");
       };
 
     if (!isOpen) return null;

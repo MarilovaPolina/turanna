@@ -30,7 +30,6 @@ const AdminPanelEditPartner = () => {
           ? `http://localhost:8000${currentPartner.logo}`
           : ''
       );
-      console.log(existingLogoUrl)
     }
   }, [currentPartner]);
 

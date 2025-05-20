@@ -114,7 +114,6 @@ function TourVariantWrapper({ tour }) {
   const hasValue = (val) => val !== null && val !== undefined && val !== '';
 
   const price = tour.price ? `${parseFloat(tour.price).toLocaleString("ru-RU")} ₽` : "—";
-console.log(tour.hotel_link)
   return (
     <div className="variant_wrapper">
       <div className="variant_image">
@@ -211,6 +210,10 @@ console.log(tour.hotel_link)
           </div>
         </div>
       </div>
+      {tour.image_text_copyright && 
+      <p class="substring copyright">
+        Фото от <a href={tour.image_link_copyright}>{tour.image_text_copyright}</a>
+        </p>}
     </div>
   );
 }

@@ -3,9 +3,7 @@ import React from "react";
 import menuIcon from "../../../../assets/img/icons/menu.png"
 
 function Sidebar({ infoSheets, selectedId, onSelect }) {
-    console.log('Sidebar infoSheets:', infoSheets);
-    
-    if (infoSheets.length === 0) return <>Загрузка...</>
+  if (infoSheets.length === 0) return <>Загрузка...</>
   return (
     <>
       <button className="info_sheet_sidebar_btn">

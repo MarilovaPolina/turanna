@@ -23,7 +23,6 @@ function CertificatesSection() {
         }
     }, [certificates]);
 
-    // Попап с фото из превью
     const openPopup = (image) => {
         setPathPreviewImg(image);
         setIsPopupOpen(true);

@@ -1,18 +1,17 @@
 import React from "react"
 import { useOutletContext } from "react-router-dom";
 
-// Icons
 import phoneYellow from '../../../../assets/img/icons/phone_yellow.png'; 
 import angleArrowYellow from '../../../../assets/img/icons/yellow_angle_arrow.png'; 
 import check from '../../../../assets/img/icons/check.png';
 import angleArrowBlue from '../../../../assets/img/icons/blue_angle_arrow.png';
 
-// Images
 import handCall from '../../../../assets/img/hand_call.png'; 
 import handCheckboxes from '../../../../assets/img/hand_checkboxes.png'; 
 
 function VariantsApplicationsSection(){
     const { onOpenPopup } = useOutletContext();
+    
     // Параллакс
     const photosBgRefs = React.useRef([]);
     const moveAmount = 18;

@@ -8,7 +8,6 @@ const MouseFollowerCursor = () => {
     const containerRef = React.useRef();
 
     React.useEffect(() => {
-        // Инициализация mouse follower
         const cursor = new MouseFollower({
             container: containerRef.current,
             speed: 1,
@@ -16,21 +15,19 @@ const MouseFollowerCursor = () => {
             innerClassName: 'mf-cursor-inner',
         });
 
-        // Находим элементы, с которыми будет взаимодействовать курсор
         const titleElements = document.querySelectorAll('.title_text');
 
         titleElements.forEach((el) => {
             el.addEventListener('mouseenter', () => {
-                cursor.addState('-title'); // Добавить состояние при наведении
+                cursor.addState('-title');
             });
 
             el.addEventListener('mouseleave', () => {
-                cursor.removeState('-title'); // Убрать состояние при уходе
+                cursor.removeState('-title');
             });
         });
 
         return () => {
-            // Очистка и уничтожение
             cursor.destroy();
             titleElements.forEach((el) => {
                 el.removeEventListener('mouseenter', () => cursor.addState('-title'));
@@ -39,7 +36,7 @@ const MouseFollowerCursor = () => {
         };
     }, []);
 
-    return <div ref={containerRef} className="mouse-follower-container"> {/* Здесь размещается ваш контейнер или пустой div */}
+    return <div ref={containerRef} className="mouse-follower-container"> {/* div */}
         <h1 className="title_text">Hover over me!</h1>
     </div>;
 };

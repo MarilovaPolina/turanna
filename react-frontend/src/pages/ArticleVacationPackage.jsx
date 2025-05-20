@@ -21,7 +21,6 @@ function ArticleVacationPackage() {
         .unwrap()
         .then((data) => {
           setTourPackageData(data);
-          console.log(data)
         })
         .catch((error) => {
           console.error('Ошибка при загрузке турподборки:', error);

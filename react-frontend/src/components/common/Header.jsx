@@ -40,14 +40,10 @@ function Header({ onOpenPopup }) {
                             </div>
                         </Link>
 
-                        
-
-                        {/* Обычное меню (показывается на десктопе) */}
                         <div className="menu_desktop">
                             <Menu onOpenPopup={onOpenPopup} />
                         </div>
 
-                        {/* Бургер-иконка */}
                         <div
                             className={`burger_menu_ch ${isMenuOpen ? 'active' : ''}`}
                             onClick={toggleMenu}
@@ -61,7 +57,6 @@ function Header({ onOpenPopup }) {
                 </div>
             </header>
 
-            {/* Оверлей и мобильное меню */}
             <div className={`burger_menu_overlay ${isMenuOpen ? 'active' : ''}`} onClick={closeMenu}></div>
 
             <div className={`mobile_menu ${isMenuOpen ? 'active' : ''}`}>

@@ -23,17 +23,12 @@ const AdminPanelEditApplication = () => {
     documents
   } = useSelector((state) => state.applications);
 
-  useEffect(() => {
-  console.log('Документы из стора:', documents);
-}, [documents]);
-
-  console.log(documents)
   const [selectedStatus, setSelectedStatus] = useState('');
 
   useEffect(() => {
     dispatch(getApplicationById(id)).then((action) => {
       if (action.meta.requestStatus === 'fulfilled') {
-        dispatch(fetchApplicationDocuments(id)).then(() => console.log('fetchApplicationDocuments вызван'));
+        dispatch(fetchApplicationDocuments(id));
       }
     });
   }, [dispatch, id]);

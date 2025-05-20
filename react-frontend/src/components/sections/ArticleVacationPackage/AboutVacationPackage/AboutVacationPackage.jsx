@@ -5,7 +5,6 @@ import egypt from '../../../../assets/img/egypt.png';
 import EditorContentArticle from "../../../common/TextEditor/EditorContentArticle";
 
 function AboutVacationPackage({tourPackageData, tourPackageDescription}){
-    console.log(tourPackageDescription)
   if (
     !tourPackageData ||
     typeof tourPackageData !== "object" ||

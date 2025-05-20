@@ -20,7 +20,6 @@ const AdminPanelEditCertificate = () => {
     if (certificate) {
       setTitle(certificate.title);
       setPreviewImage(certificate.image);
-      console.log(certificate.image)
     }
   }, [certificates, id]);
 
@@ -84,10 +83,10 @@ const AdminPanelEditCertificate = () => {
             {image ? (
                <img src={URL.createObjectURL(image)} />
             ) : previewImage ? (
-              <img src={`http://localhost:8000${previewImage}`} alt="certificate" />
+              <img src={`http://localhost:8000${previewImage}`} />
             ) : (
               <>
-                <img src={uploadImageIcon} className="upload_img_icon" alt="upload" />
+                <img src={uploadImageIcon} className="upload_img_icon" />
                 <h3>Нажмите, чтобы выбрать фото</h3>
               </>
             )}

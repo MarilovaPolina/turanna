@@ -1,12 +1,10 @@
 import React from 'react';
 
-// Основные изображения направлений
 import googleQr from '../../../../assets/img/google_qr.png';
 import googleLogo from '../../../../assets/img/google_logo.png';
 import yandexQr from '../../../../assets/img/yandex_qr.png';
 import yandexLogo from '../../../../assets/img/yandex_logo.png';
 
-// Иконки
 import locaton from '../../../../assets/img/icons/location.png';
 import watch from '../../../../assets/img/icons/watch.png';
 import phoneBlack from '../../../../assets/img/icons/phone_black.png';

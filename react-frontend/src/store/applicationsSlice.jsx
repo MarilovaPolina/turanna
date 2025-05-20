@@ -120,8 +120,6 @@ export const fetchApplicationDocuments = createAsyncThunk(
           Authorization: `Bearer ${auth.token}`,
         },
       });
-
-      console.log('Документы из API:', response.data); 
      return { applicationId, documents: response.data };
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Ошибка при загрузке документов');

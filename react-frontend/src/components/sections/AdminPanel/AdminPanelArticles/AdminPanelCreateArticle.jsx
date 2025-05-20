@@ -117,7 +117,7 @@ const AdminPanelCreateArticle = () => {
                 ? <img src={URL.createObjectURL(mainImage)} />
                 : 
                 <>
-                    <img src={uploadImageIcon} />
+                    <img src={uploadImageIcon} className="upload_img_icon" />
                     <h3>Нажмите, чтобы выбрать фото</h3>
                 </>
               }

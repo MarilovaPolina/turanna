@@ -131,7 +131,6 @@ const AllPosts = () => {
     setVisiblePostsCount((prev) => prev + 12);
   };
 
-  console.log(posts);
   return (
     <div className="container">
       <div className="posts_heading">

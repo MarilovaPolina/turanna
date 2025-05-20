@@ -266,13 +266,13 @@ const AdminPanelCreateTourPackage = () => {
             <div className="uploaded_images_wrapper">
               {formData.galleryImages.map((img, idx) => (
                 <div className="uploaded_image" key={idx}>
-                  <img src={img.preview} alt={`Галерея ${idx}`} />
+                  <img src={img.preview}  />
                 </div>
               ))}
 
               <div className="input_file_wrapper">
                 <label htmlFor="fileUpload" style={{ cursor: 'pointer' }}>
-                  <img src={uploadImageIcon} alt="Загрузить" />
+                  <img src={uploadImageIcon}  />
                   Нажмите, чтобы добавить фото
                 </label>
                 <input

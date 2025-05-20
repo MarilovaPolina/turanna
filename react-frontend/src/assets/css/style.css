@@ -2332,6 +2332,7 @@ label{
     background-repeat: no-repeat;
     background-position: center;
     border-radius: clamp(0.438rem, 0.063rem + 1.67vw, 1.563rem);
+    margin-top: 2rem;
 }
 
 .article_intro_image img {

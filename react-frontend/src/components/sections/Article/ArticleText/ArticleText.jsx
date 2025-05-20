@@ -3,7 +3,6 @@ import React from "react";
 import EditorContentArticle from "../../../common/TextEditor/EditorContentArticle";
 
 function ArticleText({content}){
-    console.log(content)
     let parsedContent;
 
     try {
@@ -13,7 +12,6 @@ function ArticleText({content}){
         parsedContent = { blocks: [] };
     }
 
-    console.log("SSSSSSSS ", parsedContent)
     return(
         <div className="editor-content-preview">
            <EditorContentArticle content={parsedContent} />

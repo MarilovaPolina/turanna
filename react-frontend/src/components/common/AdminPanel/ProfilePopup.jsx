@@ -7,7 +7,7 @@ import settingsGrayIcon from '../../../assets/img/icons/settings_gray.png';
 
 import { logoutUser } from '../../../store/authSlice';
 
-const ProfilePopup = ({ onLogout }) => {
+const ProfilePopup = () => {
     const user = useSelector(state => state.auth.user);
     const dispatch = useDispatch();
 

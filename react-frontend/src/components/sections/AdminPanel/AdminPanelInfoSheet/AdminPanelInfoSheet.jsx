@@ -63,7 +63,7 @@ const AdminPanelInfoSheet = () => {
               </th>
               <th className="table_cell">
                 Дата создания
-                <img onClick={() => handleSort('date')} className="col_sort" src={sortIcon} alt="Sort" />
+                <img onClick={() => handleSort('created_at')} className="col_sort" src={sortIcon} alt="Sort" />
               </th>
               <th className="table_cell"></th>
             </tr>

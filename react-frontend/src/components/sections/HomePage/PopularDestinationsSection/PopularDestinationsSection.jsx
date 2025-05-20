@@ -1,7 +1,6 @@
 import React from "react";
 import { useOutletContext } from "react-router-dom";
 
-// Images
 import maldivesImg from '../../../../assets/img/maldives.png';
 import kazanImg from '../../../../assets/img/kazan.png';
 import schoolImg from '../../../../assets/img/school.png';
@@ -11,7 +10,6 @@ import skiImg from '../../../../assets/img/ski.png';
 import mountainImg from '../../../../assets/img/mountain.png';
 import oxfordImg from '../../../../assets/img/oxford.png';
 
-// Icons
 import palmIcon from '../../../../assets/img/icons/palm.png';
 import grayArrowIcon from '../../../../assets/img/icons/gray_angle_arrow.png';
 import cameraIcon from '../../../../assets/img/icons/camera.png';

@@ -12,7 +12,6 @@ import { getUser } from '../store/authSlice';
 import { getApplications } from '../store/applicationsSlice';
 
 const AdminPanelLayout = () => {
-  // Get user
   const dispatch = useDispatch();
   const token = useSelector(state => state.auth.token);
 
@@ -26,7 +25,6 @@ const AdminPanelLayout = () => {
     dispatch(getApplications());
   }, [dispatch]);
 
-  // Burger-menu and sidebar
   const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 1300);
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
@@ -50,7 +48,6 @@ const AdminPanelLayout = () => {
     setSidebarOpen(false);
   };
 
-  // Popup footer
   const [isPopupOpen, setIsPopupOpen] = React.useState(false);
   const [communicationMethod, setCommunicationMethod] = React.useState('call');
   const openPopup = (method) => {
